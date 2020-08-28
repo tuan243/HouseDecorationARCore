@@ -138,8 +138,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
                     var manipulator =
                         Instantiate(ManipulatorPrefab, hit.Pose.position, rotation);
 
-                    var menuPostion = new Vector3(hit.Pose.position.x, hit.Pose.position.y + 0.5f, hit.Pose.position.z);
-                    var menu = Instantiate(ObjectMenu, menuPostion, Quaternion.identity);
+                    // var menuPostion = new Vector3(hit.Pose.position.x, hit.Pose.position.y + 0.5f, hit.Pose.position.z);
+                    // var menu = Instantiate(ObjectMenu, menuPostion, Quaternion.identity);
 
                     // Make game object a child of the manipulator.
                     gameObject.transform.parent = manipulator.transform;
@@ -150,7 +150,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
 
                     // Make manipulator a child of the anchor.
                     manipulator.transform.parent = anchor.transform;
-                    menu.transform.parent = anchor.transform;
+                    // menu.transform.parent = anchor.transform;
 
                     // Select the placed object.
                     manipulator.GetComponent<Manipulator>().Select();
