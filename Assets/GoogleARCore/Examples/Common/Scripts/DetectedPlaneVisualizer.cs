@@ -69,12 +69,12 @@ namespace GoogleARCore.Examples.Common
             }
             else if (m_DetectedPlane.TrackingState != TrackingState.Tracking)
             {
-                 m_MeshRenderer.enabled = false;
-                 return;
+                m_MeshRenderer.enabled = false;
+                return;
             }
 
             m_MeshRenderer.enabled = true;
-
+            _UpdatePlaneColor();
             _UpdateMeshIfNeeded();
         }
 
@@ -82,20 +82,43 @@ namespace GoogleARCore.Examples.Common
         /// Initializes the DetectedPlaneVisualizer with a DetectedPlane.
         /// </summary>
         /// <param name="plane">The plane to vizualize.</param>
-        public void Initialize(DetectedPlane plane)
+        public void Initialize(DetectedPlane plane, Color color)
         {
             m_DetectedPlane = plane;
-            m_MeshRenderer.material.SetColor("_GridColor", Color.white);
+            // m_MeshRenderer.material.SetColor("_GridColor", Color.white);
+            m_MeshRenderer.material.SetColor("_GridColor", color);
             m_MeshRenderer.material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
 
             Update();
+        }
+
+        public void Initialize(DetectedPlane plane)
+        {
+            m_DetectedPlane = plane;
+            m_MeshRenderer.material.SetColor("_GridColor", Color.blue);
+            m_MeshRenderer.material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
+
+            Update();
+        }
+
+        private void _UpdatePlaneColor()
+        {
+            var planeWithTypes = UpdateFloorOfTheHouse.planeWithTypeDict;
+            Color color;
+            switch (planeWithTypes[m_DetectedPlane])
+            {
+                case 0: color = Color.white; break;
+                case 1: color = Color.red; break;
+                default: color = Color.blue; break;
+            }
+            m_MeshRenderer.material.SetColor("_GridColor", color);
         }
 
         /// <summary>
         /// Update mesh with a list of Vector3 and plane's center position.
         /// </summary>
         private void _UpdateMeshIfNeeded()
-        {
+        {            
             m_DetectedPlane.GetBoundaryPolygon(m_MeshVertices);
 
             if (_AreVerticesListsEqual(m_PreviousFrameMeshVertices, m_MeshVertices))

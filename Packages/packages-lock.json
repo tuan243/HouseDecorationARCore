@@ -1,30 +1,40 @@
 {
   "dependencies": {
-    "com.unity.collab-proxy": {
-      "version": "1.2.16",
+    "com.github.asus4.tflite": {
+      "version": "file:com.github.asus4.tflite",
       "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
     },
     "com.unity.ext.nunit": {
       "version": "1.0.0",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.ide.rider": {
-      "version": "1.1.4",
       "depth": 0,
       "source": "registry",
-      "dependencies": {
-        "com.unity.test-framework": "1.1.1"
-      },
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.vscode": {
       "version": "1.2.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.mathematics": {
+      "version": "1.1.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.mobile.android-logcat": {
+      "version": "1.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -40,7 +50,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.14",
+      "version": "1.1.16",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -50,17 +60,8 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.textmeshpro": {
-      "version": "2.0.1",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
     "com.unity.timeline": {
-      "version": "1.2.15",
+      "version": "1.2.16",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

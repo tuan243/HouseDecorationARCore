@@ -54,13 +54,19 @@ namespace GoogleARCore.Examples.Common
 
             // Iterate over planes found in this frame and instantiate corresponding GameObjects to
             // visualize them.
+            var planeWithTypes = UpdateFloorOfTheHouse.planeWithTypeDict;
             Session.GetTrackables<DetectedPlane>(m_NewPlanes, TrackableQueryFilter.New);
             for (int i = 0; i < m_NewPlanes.Count; i++)
             {
                 // Instantiate a plane visualization prefab and set it to track the new plane. The
                 // transform is set to the origin with an identity rotation since the mesh for our
                 // prefab is updated in Unity World coordinates.
-                
+                // var color = Color.white;
+                // switch(planeWithTypes[m_NewPlanes[i]]) {
+                //     case 0: color = Color.blue; break;
+                //     case 1: color = Color.red; break;
+                //     default: color = Color.white; break;
+                // }
                 GameObject planeObject =
                     Instantiate(DetectedPlanePrefab, Vector3.zero, Quaternion.identity, transform);
                 planeObject.GetComponent<DetectedPlaneVisualizer>().Initialize(m_NewPlanes[i]);

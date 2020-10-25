@@ -49,6 +49,8 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         public GameObject ObjectForCeiling;
 
+        public GameObject BubbleSpeech;
+
         /// <summary>
         /// Manipulator prefab to attach placed objects to.
         /// </summary>
@@ -102,6 +104,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
             {
                 // Use hit pose and camera pose to check if hittest is from the
                 // back of the plane, if it is, no need to create the anchor.
+                Debug.Log("gesture position " + gesture.StartPosition.ToString()); 
                 if ((hit.Trackable is DetectedPlane) &&
                     Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
                         hit.Pose.rotation * Vector3.up) < 0)
@@ -127,9 +130,16 @@ namespace GoogleARCore.Examples.ObjectManipulation
                             objectPrefab = PawnPrefab;
                             break;
                     }
+
+                    var planeWithTypeDict = UpdateFloorOfTheHouse.planeWithTypeDict;
+                    if (planeWithTypeDict.ContainsKey(hit.Trackable as DetectedPlane)) {
+                        Debug.Log("Plane Type: " + planeWithTypeDict[hit.Trackable as DetectedPlane]);
+                    }
                     // Instantiate game object at the hit pose.
                     var gameObject = Instantiate(objectPrefab, hit.Pose.position, rotation);
-                    Debug.Log("hit pose postion" + hit.Pose.position);
+                    // var newPosition = new Vector3(hit.Pose.position.x, hit.Pose.position.y + 0.2f, hit.Pose.position.z);
+                    // var gameObject = Instantiate(BubbleSpeech, newPosition, rotation);
+                    // Debug.Log("hit pose postion" + hit.Pose.position);
                     // var gameObject = Instantiate(objectPrefab, hit.Pose.position, Quaternion.Euler(90, 0, 0));
 
                     // Instantiate manipulator.
