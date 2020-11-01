@@ -104,6 +104,12 @@ namespace GoogleARCore.Examples.Common
         private void _UpdatePlaneColor()
         {
             var planeWithTypes = UpdateFloorOfTheHouse.planeWithTypeDict;
+            
+            if (!planeWithTypes.ContainsKey(m_DetectedPlane))
+            {
+                return;
+            }
+
             Color color;
             switch (planeWithTypes[m_DetectedPlane])
             {

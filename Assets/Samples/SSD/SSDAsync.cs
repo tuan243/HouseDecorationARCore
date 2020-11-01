@@ -38,10 +38,8 @@ namespace TensorFlowLite
         }
 
         public async UniTask<Result[]> InvokeAsync(Texture inputTex) {
-            Debug.Log("invoke async start");
             ToTensor(inputTex, input0);
             var result = await DetectAsync();
-            Debug.Log("invoke async end");
             return result;
         }
 

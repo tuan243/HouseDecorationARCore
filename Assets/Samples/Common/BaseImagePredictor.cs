@@ -52,8 +52,8 @@ namespace TensorFlowLite
             resizer = new TextureResizer();
             resizeOptions = new TextureResizer.ResizeOptions()
             {
-                // aspectMode = TextureResizer.AspectMode.Fill,
-                aspectMode = TextureResizer.AspectMode.None,
+                aspectMode = TextureResizer.AspectMode.Fill,
+                // aspectMode = TextureResizer.AspectMode.None,
                 rotationDegree = 0,
                 mirrorHorizontal = false,
                 mirrorVertical = false,

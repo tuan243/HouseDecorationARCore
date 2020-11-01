@@ -102,6 +102,21 @@ namespace TensorFlowLite
             {
                 options = options.GetModifedForWebcam((WebCamTexture)texture);
             }
+            else if (texture is Texture2D) {
+                switch(Screen.orientation) {
+                    case ScreenOrientation.LandscapeLeft:
+                        options.rotationDegree = 0;
+                        break;
+                    case ScreenOrientation.LandscapeRight:
+                        options.rotationDegree = -180;
+                        break;
+                    case ScreenOrientation.PortraitUpsideDown:
+                        options.rotationDegree = -270;
+                        break;
+                    default: options.rotationDegree = -90;
+                    break;
+                }
+            }
 
             VertexTransfrom = GetVertTransform(options.rotationDegree, options.mirrorHorizontal, options.mirrorVertical);
             UVRect = GetTextureST(texture, options);

@@ -356,6 +356,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d7425b33e63f2449baff3e3b5cc497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FirstPersonCamera: {fileID: 646831371}
+  objectPoint: {fileID: 1352171977566921674, guid: e7edf36e6e65b7443a8b6a362cb0b1ac,
+    type: 3}
   fileName: coco_ssd_mobilenet_quant.tflite
   framePrefab: {fileID: 5133934790876113832, guid: 717c89ea2a05f4537b007f12d6357590,
     type: 3}
