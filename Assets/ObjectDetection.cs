@@ -12,9 +12,19 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 public class ObjectDetection : MonoBehaviour
 {
+    Dictionary<int, Color> m_categoryColorMap = new Dictionary<int, Color>()
+    {
+        {61, new Color(1f, 0f, 0f, 1f)},
+        {72, new Color(0f, 1f, 0f, 1f)},
+        {46, new Color(0f, 0f, 1f, 1f)},
+        {73, new Color(1f, 1f, 0f, 1f)}
+    };
+    private float m_minSPDistance = 0.2f;
     private int m_MaxPointCount = 1000;
     private LinkedList<Vector3> m_CachedPoints;
+    private List<GameObject> m_ObjectList;
     private Dictionary<int, PointCloudPoint> m_CachedPointsDict;
+    private LinkedList<SuperPoint> m_SuperPoints;
     public Camera FirstPersonCamera;
     public GameObject objectPoint;
     private float detectFrequency = 0.25f;
@@ -40,12 +50,16 @@ public class ObjectDetection : MonoBehaviour
     Text[] frames;
 
     public string[] labels;
+
     // Start is called before the first frame update
     void Start()
     {
         // Instantiate(objectPoint, new Vector3(0f, 0f, 1f), Quaternion.identity);
-        m_CachedPoints = new LinkedList<Vector3>();
+        // m_CachedPoints = new LinkedList<Vector3>();
         m_CachedPointsDict = new Dictionary<int, PointCloudPoint>();
+        m_SuperPoints = new LinkedList<SuperPoint>();
+        m_ObjectList = new List<GameObject>();
+
         string path = Path.Combine(Application.streamingAssetsPath, fileName);
         // Debug.Log("fucking path " + path);
         // ssd = new SSD(path);
@@ -103,8 +117,133 @@ public class ObjectDetection : MonoBehaviour
         {
             return null;
         }
-        // Debug.Log($"Sumpoint: {sumPoint.ToString()}, count {count}");
         return sumPoint / count;
+    }
+
+    void UpdateSuperPoints(Vector3 loc, float p, int label, Vector3 view, float scale)
+    {
+        LinkedListNode<SuperPoint> pointNode;
+        List<SuperPoint> spSubset = new List<SuperPoint>();
+
+        for (pointNode = m_SuperPoints.First; pointNode != null; pointNode = pointNode.Next)
+        {
+            if ((pointNode.Value.loc - loc).magnitude < m_minSPDistance)
+            {
+                spSubset.Add(pointNode.Value);
+            }
+        }
+
+        float sdiff = 0f;
+        float vdiff = 0f;
+        float labelScore = ComputeLabelScore(ref spSubset, p, label, view, scale, out vdiff, out sdiff);
+
+        if (spSubset.Count != 0)
+        {
+            foreach (var sp in spSubset)
+            {
+                if (sp.list_score.ContainsKey(label))
+                {
+                    sp.list_score[label] += labelScore;
+                }
+                else
+                {
+                    sp.list_score.Add(label, 0f);
+                }
+
+                float maxValue = -1f;
+                int l = 0;
+                foreach (var score in sp.list_score)
+                {
+                    if (score.Value > maxValue)
+                    {
+                        maxValue = score.Value;
+                        l = score.Key;
+                    }
+                }
+
+                Debug.Log("Best category " + l);
+                if (m_categoryColorMap.ContainsKey(l))
+                {
+                    m_ObjectList[sp.id].GetComponent<MeshRenderer>().material.color = m_categoryColorMap[l];
+                }
+            }
+
+            if (vdiff >= 45f)
+            {
+                foreach (var sp in spSubset)
+                {
+                    sp.list_view.Add(view);
+                }
+            }
+
+            if (sdiff >= 1f)
+            {
+                foreach (var sp in spSubset)
+                {
+                    sp.list_scale.Add(scale);
+                }
+            }
+        }
+        else
+        {
+            m_SuperPoints.AddLast(new SuperPoint(m_SuperPoints.Count, loc, label, labelScore, view, scale));
+            Vector3 lookVector = new Vector3(FirstPersonCamera.transform.position.x - loc.x, loc.y, FirstPersonCamera.transform.position.z - loc.z);
+            Quaternion lookCameraRotation = Quaternion.LookRotation(lookVector, Vector3.up);
+            var gameObject = Instantiate(objectPoint, loc, lookCameraRotation);
+            if (m_categoryColorMap.ContainsKey(label))
+            {
+                gameObject.GetComponent<MeshRenderer>().material.color = m_categoryColorMap[label];
+            }
+            m_ObjectList.Add(gameObject);
+        }
+    }
+
+    float ComputeWv(ref List<SuperPoint> spSubset, Vector3 view, out float vdiff)
+    {
+        vdiff = 180;
+        foreach (var sp in spSubset)
+        {
+            foreach (var v in sp.list_view)
+            {
+                var angleDiff = Vector3.Angle(v, view);
+                if (angleDiff < vdiff)
+                {
+                    vdiff = angleDiff;
+                }
+            }
+        }
+
+        if (vdiff < 45)
+            return 0;
+        if (vdiff >= 45 && vdiff <= 90)
+            return (vdiff - 45) / 45f;
+        return 1;
+    }
+
+    float ComputeWs(ref List<SuperPoint> spSubset, float scale, out float sdiff)
+    {
+        sdiff = 5;
+        foreach (var sp in spSubset)
+        {
+            foreach (var s in sp.list_scale)
+            {
+                var diff = Mathf.Abs(scale - s);
+                if (diff < sdiff)
+                {
+                    sdiff = diff;
+                }
+            }
+        }
+
+        return 0.2f * sdiff;
+    }
+
+    float ComputeLabelScore(ref List<SuperPoint> spSubset, float p, int label, Vector3 view, float scale, out float sdiff, out float vdiff)
+    {
+        float wv = ComputeWv(ref spSubset, view, out vdiff);
+        float ws = ComputeWs(ref spSubset, scale, out sdiff);
+
+        return (wv + ws) * p / 2f;
     }
 
     async UniTaskVoid DemoAsync()
@@ -164,26 +303,26 @@ public class ObjectDetection : MonoBehaviour
             await UniTask.SwitchToMainThread();
 
             textureNoRotate.LoadRawTextureData(RGBimage);
-            result.SetPixels32(rotateTexture(textureNoRotate, true));
-            result.Apply();
+            // result.SetPixels32(rotateTexture(textureNoRotate, true));
+            // result.Apply();
             textureNoRotate.Apply();
-            System.IO.File.WriteAllBytes(Application.persistentDataPath + "/tex_480_640.png", result.EncodeToPNG());
+            // System.IO.File.WriteAllBytes(Application.persistentDataPath + "/tex_480_640.png", result.EncodeToPNG());
 
             var SSDBoxs = await sSDAsync.InvokeAsync(textureNoRotate);
 
             var size = rawImage.rectTransform.rect.size;
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var adjustedBox = AdjustSSDResult(SSDBoxs[i]);
 
                 SetFrame(frames[i], adjustedBox, size);
+                Debug.Log($"Box label {adjustedBox.classID} {GetLabelName(adjustedBox.classID)}, {adjustedBox.rect.ToString()}, {adjustedBox.score}");
                 if (SSDBoxs[i].score < 0.5f)
                 {
                     continue;
                 }
 
-                Debug.Log($"Box label {adjustedBox.classID} {GetLabelName(adjustedBox.classID)}, {adjustedBox.rect.ToString()}, {adjustedBox.score}");
                 var objectPos = getMedianObjectPoint(adjustedBox);
 
                 if (objectPos == null)
@@ -193,14 +332,17 @@ public class ObjectDetection : MonoBehaviour
                 }
 
                 var position = (Vector3)objectPos;
-                var colliders = Physics.OverlapSphere(position, 0.1f, LayerMask.GetMask("CloudPoint"));
-                if (colliders.Length < 1)
-                {
-                    Vector3 lookVector = new Vector3(FirstPersonCamera.transform.position.x - position.x, position.y, FirstPersonCamera.transform.position.z - position.z);
-                    Quaternion lookCameraRotation = Quaternion.LookRotation(lookVector, Vector3.up);
-                    var bubbleSpeech = Instantiate(objectPoint, position, lookCameraRotation);
-                    bubbleSpeech.GetComponent<LabelBubble>().SetText(GetLabelName(adjustedBox.classID));
-                }
+                // var colliders = Physics.OverlapSphere(position, 0.1f, LayerMask.GetMask("CloudPoint"));
+                // if (colliders.Length < 1)
+                // {
+                //     Vector3 lookVector = new Vector3(FirstPersonCamera.transform.position.x - position.x, position.y, FirstPersonCamera.transform.position.z - position.z);
+                //     Quaternion lookCameraRotation = Quaternion.LookRotation(lookVector, Vector3.up);
+                //     var bubbleSpeech = Instantiate(objectPoint, position, lookCameraRotation);
+                //     bubbleSpeech.GetComponent<LabelBubble>().SetText(GetLabelName(adjustedBox.classID));
+                // }
+                Vector3 view = (FirstPersonCamera.transform.position - position).normalized;
+                float scale = Mathf.Log((FirstPersonCamera.transform.position - position).magnitude, 2);
+                UpdateSuperPoints(position, SSDBoxs[i].score, SSDBoxs[i].classID, view, scale);
 
                 // gameObject.transform.parent = anchor.transform;
                 // if (SSDBoxs[i].classID == 73) //73: mouse
@@ -293,7 +435,7 @@ public class ObjectDetection : MonoBehaviour
         // }
 
         // m_CachedPoints.AddLast(point);
-        if (m_CachedPointsDict.Count >= m_MaxPointCount) 
+        if (m_CachedPointsDict.Count >= m_MaxPointCount)
         {
             var rand = new System.Random();
             int key = m_CachedPointsDict.ElementAt(rand.Next(m_CachedPointsDict.Count)).Key;
@@ -305,7 +447,7 @@ public class ObjectDetection : MonoBehaviour
         {
             m_CachedPointsDict.Add(point.Id, point);
         }
-        else 
+        else
         {
             m_CachedPointsDict[point.Id] = point;
         }
@@ -338,29 +480,8 @@ public class ObjectDetection : MonoBehaviour
         return rotated;
     }
 
-    void SetFrame(Text frame, SSD.Result result, Vector2 size)
+    SSDAsync.Result AdjustSSDResult(SSDAsync.Result result)
     {
-        if (result.score < scoreThreshold)
-        {
-            frame.gameObject.SetActive(false);
-            return;
-        }
-        else
-        {
-            frame.gameObject.SetActive(true);
-        }
-
-        frame.text = $"{GetLabelName(result.classID)} : {(int)(result.score * 100)}%";
-        var rt = frame.transform as RectTransform;
-        // var newPos = new Vector2(result.rect.position.x, (result.rect.position.y + 0.125f) / 1.375f);
-        rt.anchoredPosition = result.rect.position * size - size * 0.5f;
-        // rt.anchoredPosition = newPos * size - size * 0.5f;
-        // var newSize = new Vector2(result.rect.size.x, result.rect.size.y / 1.375f);
-        rt.sizeDelta = result.rect.size * size;
-        // rt.sizeDelta = newSize * size;
-    }
-
-    SSDAsync.Result AdjustSSDResult(SSDAsync.Result result) {
         bool isPortrait = true;
         switch (m_cachedOrientation)
         {
@@ -373,7 +494,7 @@ public class ObjectDetection : MonoBehaviour
                 isPortrait = false;
                 break;
         }
-        if (isPortrait) 
+        if (isPortrait)
         {
             result.rect.position = new Vector2(result.rect.position.x, (result.rect.position.y * 6 + 1) / 8f);
             result.rect.size = new Vector2(result.rect.size.x, result.rect.size.y * 0.75f);

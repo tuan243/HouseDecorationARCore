@@ -133,8 +133,8 @@ namespace TensorFlowLite
             fetchTexture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
             fetchTexture.Apply();
 
-            Debug.Log("fucking path arcorenew" + Application.persistentDataPath);
-            System.IO.File.WriteAllBytes(Application.persistentDataPath + "/tex_new.png", fetchTexture.EncodeToPNG());
+            // Debug.Log("fucking path arcorenew" + Application.persistentDataPath);
+            // System.IO.File.WriteAllBytes(Application.persistentDataPath + "/tex_new.png", fetchTexture.EncodeToPNG());
 
             RenderTexture.active = prevRT;
 
