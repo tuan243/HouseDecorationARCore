@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public static class ButtonExtension
-{
-	public static void AddEventListener<T> (this Button button, T param, Action<T> OnClick)
-	{
-		button.onClick.AddListener (delegate() {
-			OnClick (param);
-		});
-	}
-}
+// public static class ButtonExtension
+// {
+// 	public static void AddEventListener<T> (this Button button, T param, Action<T> OnClick)
+// 	{
+// 		button.onClick.AddListener (delegate() {
+// 			OnClick (param);
+// 		});
+// 	}
+// }
 
 public class FurItem : MonoBehaviour
 {
@@ -27,17 +27,18 @@ public class FurItem : MonoBehaviour
 
 	void Start ()
 	{
-		GameObject buttonTemplate = transform.GetChild (0).gameObject;
+		GameObject buttonTemplate = transform.GetChild(0).gameObject;
 		GameObject g;
 
 		int N = allGames.Length;
 
 		for (int i = 0; i < N; i++) {
-			g = Instantiate (buttonTemplate, transform);
-			g.transform.GetChild (0).GetComponent <Image> ().sprite = allGames [i].Icon;
-			g.GetComponent <Button> ().AddEventListener (i, ItemClicked);
+			g = Instantiate(buttonTemplate, transform);
+			g.transform.GetChild(0).GetComponent<Image>().sprite = allGames [i].Icon;
+			g.GetComponent<Button>().AddEventListener(i, ItemClicked);
 		}
-		Destroy (buttonTemplate);
+
+		Destroy(buttonTemplate);
 	}
 
 	void ItemClicked (int itemIndex)

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class Openmenu : MonoBehaviour
 {
     public GameObject Panel;
-    public GameObject buttonA; 
+    public GameObject buttonA;
+
     public void OpenPanel()
     {
         if(Panel.activeSelf == true)

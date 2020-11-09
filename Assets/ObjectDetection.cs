@@ -262,6 +262,8 @@ public class ObjectDetection : MonoBehaviour
                 return;
             }
 
+            Debug.Log($"Screen size ({Screen.width}, {Screen.height})");
+
             if (result == null)
             {
                 Debug.Log("result null !!!");
