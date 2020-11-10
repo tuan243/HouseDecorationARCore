@@ -70,6 +70,10 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// <returns>True if the manipulation can be started.</returns>
         protected override bool CanStartManipulationForGesture(TapGesture gesture)
         {
+            if (SlideUpPanel.wasClickedOnUI == true)
+            {
+                return false;
+            }
             if (gesture.TargetObject == null)
             {
                 return true;

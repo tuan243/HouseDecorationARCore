@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -22,7 +23,7 @@ public static class ButtonExtension
         });
     }
 }
-public class SlideUpPanel : MonoBehaviour
+public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [Serializable]
     public struct FurnitureGroup
@@ -44,6 +45,7 @@ public class SlideUpPanel : MonoBehaviour
     private Transform furButtonsContainer;
     private List<List<GameObject>> allFurnituresButton;
     private int choosingCategoryIndex = 0;
+    public static bool wasClickedOnUI = false;
     void Awake()
     {
         categoryButtonsContainer = transform.Find("FurCategoryListView/Content");
@@ -103,5 +105,17 @@ public class SlideUpPanel : MonoBehaviour
         {
             allFurnituresButton[choosingCategoryIndex][i].SetActive(true);
         }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        wasClickedOnUI = true;
+        Debug.Log("Do nothing!");
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        Debug.Log("Pointer up!");
+        wasClickedOnUI = false;
     }
 }
