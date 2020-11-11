@@ -21,10 +21,6 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
     private float lowestPossibleFloor = -3f;
     private float minWallArea = 1f;
 
-    // public static Dictionary<DetectedPlane, int> getPlaneWithTypeDict() {
-    //     return planeWithTypeDict;
-    // }
-    // Update is called once per frame
     void Update()
     {
         // Check that motion tracking is tracking.
@@ -39,7 +35,6 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
             return;
         }
 
-
         Session.GetTrackables<DetectedPlane>(m_NewPlanes, TrackableQueryFilter.Updated);
         for (int i = 0; i < m_NewPlanes.Count; i++)
         {
@@ -47,8 +42,6 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
             {
                 continue;
             }
-
-
 
             if (isARPlaneFloor(m_NewPlanes[i]))
             {

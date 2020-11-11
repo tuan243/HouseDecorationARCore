@@ -121,6 +121,135 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &105511760
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 105511761}
+  - component: {fileID: 105511762}
+  m_Layer: 0
+  m_Name: ObjectStorage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &105511761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105511760}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &105511762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105511760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3bca333fc58fda41a2a376bdf48c4d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allFurnitures:
+  - categoryName: Accessories
+    furnitures:
+    - {fileID: 2412635086797368798, guid: d2c7beaff84ffde4d8d1e8a8cbb33472, type: 3}
+    - {fileID: 7890395703068216185, guid: 2b79d0b604c9c0346b84120d1d0c1372, type: 3}
+    - {fileID: 1824037077002589179, guid: 7f4a93c48d1dd0f4e97da145da6af11f, type: 3}
+    - {fileID: 6704161884960149679, guid: 78c2e6f7636a88544897199ff0fddb93, type: 3}
+    - {fileID: 6004861815016593323, guid: 35dfee24f66d5e8438e451d00fae1a2f, type: 3}
+    - {fileID: 1693257826140412879, guid: 730260bd5eda0cf40b52fec4d4b6416d, type: 3}
+    - {fileID: 7848460566030341524, guid: 2c86973d64da3464c85a7799a7623b06, type: 3}
+    - {fileID: 1032835742281439419, guid: f4414676f0344144d9433ce275d95cb2, type: 3}
+    icons:
+    - {fileID: 21300000, guid: c2ab9cff0030f1546a801db5094e6dd0, type: 3}
+    - {fileID: 21300000, guid: 5e3dc65a34dcd8945b09aa460c70d309, type: 3}
+    - {fileID: 21300000, guid: 29a1cb533fcd67945a19b67e69625253, type: 3}
+    - {fileID: 21300000, guid: 5d076ce5f89de9e4bb764bda74c21e78, type: 3}
+    - {fileID: 21300000, guid: 57f76e179403cea49b8feadf6ac41a65, type: 3}
+    - {fileID: 21300000, guid: 8e94a260b851f5d4a9b7a0f7d9ca66da, type: 3}
+    - {fileID: 21300000, guid: 46e762de3703a42459699865f410235d, type: 3}
+    - {fileID: 21300000, guid: b73a089c2870e364a9b309ef7edb7313, type: 3}
+  - categoryName: Bed
+    furnitures:
+    - {fileID: 7672841224421859676, guid: 3fa53d85cd2d56d4882eb9ea59f539b1, type: 3}
+    - {fileID: 1149864373588058848, guid: 19acb12d2d4ca2149815f3765c399d17, type: 3}
+    - {fileID: 5505073121711394646, guid: 98520fb6418153741a3c59a24fb98111, type: 3}
+    icons:
+    - {fileID: 21300000, guid: abf7515f5b7a3ec4485317c03913bf10, type: 3}
+    - {fileID: 21300000, guid: 5a324b79c44245244bdb5e401f14f812, type: 3}
+    - {fileID: 21300000, guid: 02e7950a9f4068547bbbeab16d606900, type: 3}
+  - categoryName: Shell
+    furnitures:
+    - {fileID: 4581559688559186716, guid: 31a5e4cab84255c45ab7e07b6e203cfd, type: 3}
+    - {fileID: 4498010077671049855, guid: ca7cf957cbd5f694a94db9e079a455f5, type: 3}
+    - {fileID: 5637007297702967307, guid: f4f37b7dcfae2704395b5c1366810b9a, type: 3}
+    - {fileID: 5163032416931361301, guid: efca8e9fa6ea6a5418ee358ad5274e9a, type: 3}
+    - {fileID: 6058931535343273391, guid: 641b53e2a6f52d04aa63bd5d10155f38, type: 3}
+    - {fileID: 4203744278827586243, guid: 06e2f9e2e0e4c13488af42eb3916368c, type: 3}
+    icons:
+    - {fileID: 21300000, guid: 99bfd7e13ec371a4fbf17b73fb02b6d9, type: 3}
+    - {fileID: 21300000, guid: 692fb96fecb528d45b76550f2d0af69f, type: 3}
+    - {fileID: 21300000, guid: fdc4b6cf1c366384b94244ca71614130, type: 3}
+    - {fileID: 21300000, guid: 819cfc7e78f9b814d88ce120f317a18a, type: 3}
+    - {fileID: 21300000, guid: 0609bb68bbc5f104a8833624db77f0e6, type: 3}
+    - {fileID: 21300000, guid: f91483b3cacd7e54f9cd8ea1acbe44e5, type: 3}
+  - categoryName: Couch
+    furnitures:
+    - {fileID: 3305537292431475296, guid: 3405b9390523ecc478dd0851dc41d497, type: 3}
+    - {fileID: 8567085898474810562, guid: a1d0c11cf80158c46b705ab34d93222d, type: 3}
+    - {fileID: 3300390092830002732, guid: 028fe2eec4c869843b42530550a2a7b7, type: 3}
+    - {fileID: 1523221696543191628, guid: bcd8c81c6722bca4bbc5be973f3f6b3f, type: 3}
+    - {fileID: 7011459530861175767, guid: a4808c42e547aa94a9d58744e5a63289, type: 3}
+    - {fileID: 627641226993672687, guid: a0e1d5c703a7fc94cab598b640f25b84, type: 3}
+    - {fileID: 8251183295473186584, guid: 3ccb49791d05df34ab2912f512894327, type: 3}
+    - {fileID: 5742807322365416252, guid: 6674d5abedf15b34d8bf7cb36b3f7955, type: 3}
+    - {fileID: 610844952309935287, guid: 707cdc78ee0efc94293c8f982702e33b, type: 3}
+    - {fileID: 378609169012065052, guid: d886b021348c8b641a533541e775ca1c, type: 3}
+    icons:
+    - {fileID: 21300000, guid: 54dcfda39469ea3448050d885b70e634, type: 3}
+    - {fileID: 21300000, guid: 84bac053b870c2d4caf93aecbcd4553f, type: 3}
+    - {fileID: 21300000, guid: a6c5b6c3e1343c544af8f8012279a5e8, type: 3}
+    - {fileID: 21300000, guid: ed7abffb5b102744ab9f431d7c5b8f5e, type: 3}
+    - {fileID: 21300000, guid: db1f4746aa53e684182ed52dcb0ff952, type: 3}
+    - {fileID: 21300000, guid: 4aef848595f11c3458860443220cf2d2, type: 3}
+    - {fileID: 21300000, guid: 2784aa84a90ff4c43a51eb34152cb0e9, type: 3}
+    - {fileID: 21300000, guid: da351c24d55146c4885b9c1c29f677af, type: 3}
+    - {fileID: 21300000, guid: 60f18e6d63587c54b884f061653c36ff, type: 3}
+    - {fileID: 21300000, guid: a65baa3a3eb68e648a9715a0cb7b5988, type: 3}
+  - categoryName: Table & chair
+    furnitures:
+    - {fileID: 6047396496498652796, guid: ee5c06c709bdd1042a1c5fb6859721ea, type: 3}
+    - {fileID: 4500097954179701017, guid: 4fcd06a62472c9a4581301c3c248d85d, type: 3}
+    - {fileID: 5275490372205258325, guid: 43d7f079dca1ca74a91e941238896760, type: 3}
+    - {fileID: 6985146860115554717, guid: 228c52df5da64df478d550b9b0ad9721, type: 3}
+    - {fileID: 8475838269806521414, guid: 8b362f917acfc0848886a9386ab8ab3b, type: 3}
+    - {fileID: 7984383975434074103, guid: 985e252aeb03af843a16ae7ae180d223, type: 3}
+    - {fileID: 1131662160883620006, guid: 2b813cabcde4d2d4b83b6c35364ee56e, type: 3}
+    - {fileID: 6879381006180043183, guid: 519bca250ea3b2c4eaa285b7c57d1a82, type: 3}
+    icons:
+    - {fileID: 21300000, guid: c9323d7390dc0f34ab6d3be913a261bd, type: 3}
+    - {fileID: 21300000, guid: e57c4760ffd06834db5789781169b7ce, type: 3}
+    - {fileID: 21300000, guid: 2aac32b34d480df4a881a2df9b714a78, type: 3}
+    - {fileID: 21300000, guid: f64b474a9c9075d49ac3da18f698238a, type: 3}
+    - {fileID: 21300000, guid: b9ddb41badbfac2439d2ec76fe2c2a05, type: 3}
+    - {fileID: 21300000, guid: 3128e06d6d26c7740963e203024809d3, type: 3}
+    - {fileID: 21300000, guid: 1dcae5ae94612a540bba1b55a9eaa4b8, type: 3}
+    - {fileID: 21300000, guid: 312b6baf5ee8c234eb94f9bdaaa0316d, type: 3}
 --- !u!1 &190932871
 GameObject:
   m_ObjectHideFlags: 0
@@ -565,6 +694,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 511cf6164a5abe74e8547eb42bed53b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &624286412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 624286414}
+  - component: {fileID: 624286413}
+  m_Layer: 0
+  m_Name: AutoPlacementController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &624286413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624286412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65d119fec37fec40986361a81594500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FirstPersonCamera: {fileID: 646831371}
+  ManipulatorPrefab: {fileID: 1122865395318488, guid: 24556cd4924884d9aaa3d80135c8021d,
+    type: 3}
+  Furniture: {fileID: 7848460566030341524, guid: 2c86973d64da3464c85a7799a7623b06,
+    type: 3}
+--- !u!4 &624286414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624286412}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &627916101
 GameObject:
   m_ObjectHideFlags: 0
@@ -2313,44 +2490,6 @@ MonoBehaviour:
     type: 3}
   furnitureButton: {fileID: 8413884880000147441, guid: a37ee86f59839fa46be3d74a973734ea,
     type: 3}
-  allFurnitures:
-  - categoryName: Accesories
-    furnitures:
-    - Icon: {fileID: 21300000, guid: c2ab9cff0030f1546a801db5094e6dd0, type: 3}
-      model: {fileID: 2412635086797368798, guid: d2c7beaff84ffde4d8d1e8a8cbb33472,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 5e3dc65a34dcd8945b09aa460c70d309, type: 3}
-      model: {fileID: 7890395703068216185, guid: 2b79d0b604c9c0346b84120d1d0c1372,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 29a1cb533fcd67945a19b67e69625253, type: 3}
-      model: {fileID: 1824037077002589179, guid: 7f4a93c48d1dd0f4e97da145da6af11f,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 5d076ce5f89de9e4bb764bda74c21e78, type: 3}
-      model: {fileID: 6704161884960149679, guid: 78c2e6f7636a88544897199ff0fddb93,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 57f76e179403cea49b8feadf6ac41a65, type: 3}
-      model: {fileID: 6004861815016593323, guid: 35dfee24f66d5e8438e451d00fae1a2f,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 8e94a260b851f5d4a9b7a0f7d9ca66da, type: 3}
-      model: {fileID: 1693257826140412879, guid: 730260bd5eda0cf40b52fec4d4b6416d,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 46e762de3703a42459699865f410235d, type: 3}
-      model: {fileID: 7848460566030341524, guid: 2c86973d64da3464c85a7799a7623b06,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: b73a089c2870e364a9b309ef7edb7313, type: 3}
-      model: {fileID: 1032835742281439419, guid: f4414676f0344144d9433ce275d95cb2,
-        type: 3}
-  - categoryName: Bed
-    furnitures:
-    - Icon: {fileID: 21300000, guid: abf7515f5b7a3ec4485317c03913bf10, type: 3}
-      model: {fileID: 7672841224421859676, guid: 3fa53d85cd2d56d4882eb9ea59f539b1,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 5a324b79c44245244bdb5e401f14f812, type: 3}
-      model: {fileID: 1149864373588058848, guid: 19acb12d2d4ca2149815f3765c399d17,
-        type: 3}
-    - Icon: {fileID: 21300000, guid: 02e7950a9f4068547bbbeab16d606900, type: 3}
-      model: {fileID: 5505073121711394646, guid: 98520fb6418153741a3c59a24fb98111,
-        type: 3}
 --- !u!114 &1213040771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2911,7 +3050,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1775792183
 MonoBehaviour:
   m_ObjectHideFlags: 0

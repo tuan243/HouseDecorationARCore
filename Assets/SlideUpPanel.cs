@@ -25,22 +25,25 @@ public static class ButtonExtension
 }
 public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [Serializable]
-    public struct FurnitureGroup
-    {
-        public string categoryName;
-        public List<Furniture> furnitures;
-    }
+    // [Serializable]
+    // public struct FurnitureGroup
+    // {
+    //     public string categoryName;
+    //     public List<Furniture> furnitures;
+    // }
 
-    [Serializable]
-    public struct Furniture
-    {
-        public Sprite Icon;
-        public GameObject model;
-    }
+    // [Serializable]
+    // public struct Furniture
+    // {
+    //     public Sprite Icon;
+    //     public GameObject model;
+    // }
+    // public GameObject categoryButton;
+    // public GameObject furnitureButton;
+    // public List<FurnitureGroup> allFurnitures;
     public GameObject categoryButton;
     public GameObject furnitureButton;
-    public List<FurnitureGroup> allFurnitures;
+    private ObjectStorage objectStorage;
     private Transform categoryButtonsContainer;
     private Transform furButtonsContainer;
     private List<List<GameObject>> allFurnituresButton;
@@ -50,11 +53,10 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         categoryButtonsContainer = transform.Find("FurCategoryListView/Content");
         furButtonsContainer = transform.Find("FurListView/Content");
+        objectStorage = GameObject.Find("/ObjectStorage").GetComponent<ObjectStorage>();
     }
     void Start()
     {
-        Debug.Log("hi");
-
         if (categoryButtonsContainer == null || furButtonsContainer == null)
         {
             Debug.Log("cant get container of button :(");
@@ -62,28 +64,26 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
 
         allFurnituresButton = new List<List<GameObject>>();
-        Debug.Log("hello");
-        Debug.Log("all furniture Button count " + allFurnituresButton.Count);
-        for (int i = 0; i < allFurnitures.Count; i++)
+        for (int i = 0; i < objectStorage.allFurnitures.Count; i++)
         {
             // Debug.Log("Oh my god!! " + i);
             allFurnituresButton.Add(new List<GameObject>());
 
             var catBtn = Instantiate(categoryButton, categoryButtonsContainer);
-            catBtn.GetComponentInChildren<Text>().text = allFurnitures[i].categoryName;
+            catBtn.GetComponentInChildren<Text>().text = objectStorage.allFurnitures[i].categoryName;
             catBtn.GetComponent<Button>().AddEventListener(i, CategoryButtonClick);
 
-            for (int j = 0; j < allFurnitures[i].furnitures.Count; j++)
+            for (int j = 0; j < objectStorage.allFurnitures[i].furnitures.Count; j++)
             {
                 var furBtn = Instantiate(furnitureButton, furButtonsContainer);
                 furBtn.SetActive(false);
-                furBtn.transform.GetChild(0).GetComponent<Image>().sprite = allFurnitures[i].furnitures[j].Icon;
+                furBtn.transform.GetChild(0).GetComponent<Image>().sprite = objectStorage.allFurnitures[i].icons[j];
                 furBtn.GetComponent<Button>().AddEventListener(i, j, FurButtonClick);
                 allFurnituresButton[i].Add(furBtn);
             }
         }
 
-        for (int i = 0; i < allFurnitures[0].furnitures.Count; i++)
+        for (int i = 0; i < allFurnituresButton[0].Count; i++)
         {
             allFurnituresButton[0][i].SetActive(true);
         }
@@ -96,12 +96,12 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void CategoryButtonClick(int categoryIndex)
     {
-        for (int i = 0; i < allFurnitures[choosingCategoryIndex].furnitures.Count; i++)
+        for (int i = 0; i < objectStorage.allFurnitures[choosingCategoryIndex].furnitures.Count; i++)
         {
             allFurnituresButton[choosingCategoryIndex][i].SetActive(false);
         }
         choosingCategoryIndex = categoryIndex;
-        for (int i = 0; i < allFurnitures[choosingCategoryIndex].furnitures.Count; i++)
+        for (int i = 0; i < objectStorage.allFurnitures[choosingCategoryIndex].furnitures.Count; i++)
         {
             allFurnituresButton[choosingCategoryIndex][i].SetActive(true);
         }

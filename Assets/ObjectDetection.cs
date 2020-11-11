@@ -54,15 +54,11 @@ public class ObjectDetection : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Instantiate(objectPoint, new Vector3(0f, 0f, 1f), Quaternion.identity);
-        // m_CachedPoints = new LinkedList<Vector3>();
         m_CachedPointsDict = new Dictionary<int, PointCloudPoint>();
         m_SuperPoints = new LinkedList<SuperPoint>();
         m_ObjectList = new List<GameObject>();
 
         string path = Path.Combine(Application.streamingAssetsPath, fileName);
-        // Debug.Log("fucking path " + path);
-        // ssd = new SSD(path);
         sSDAsync = new SSDAsync(path);
         frames = new Text[10];
 
@@ -104,8 +100,15 @@ public class ObjectDetection : MonoBehaviour
         foreach (KeyValuePair<int, PointCloudPoint> pair in m_CachedPointsDict)
         {
             Vector2 pointInScreen = Camera.main.WorldToScreenPoint(pair.Value.Position);
-
-            Vector2 pointInScreenNormalized = new Vector2((0.2f + pointInScreen.x) / (1.67f * Screen.width), pointInScreen.y / Screen.height);
+            Vector2 pointInScreenNormalized;
+            if (m_cachedOrientation == ScreenOrientation.Portrait)
+            {
+                pointInScreenNormalized = new Vector2((pointInScreen.x + (Screen.width / 3)) / (1.67f * Screen.width), pointInScreen.y / Screen.height);
+            }
+            else 
+            {
+                pointInScreenNormalized = new Vector2(pointInScreen.x / Screen.width, (pointInScreen.y + (Screen.height / 3)) / (1.67f * Screen.height));
+            }
             if (isPointInsideRect(pointInScreenNormalized, ssdResult.rect))
             {
                 sumPoint += pair.Value.Position;
@@ -273,7 +276,7 @@ public class ObjectDetection : MonoBehaviour
                 RGBimage = new byte[image.Width * image.Height * 3];
             }
 
-            await UniTask.SwitchToThreadPool();
+            // await UniTask.SwitchToThreadPool();
 
             unsafe
             {
@@ -302,7 +305,7 @@ public class ObjectDetection : MonoBehaviour
                 Debug.LogWarning("Color conversion - k != 0");
                 return;
             }
-            await UniTask.SwitchToMainThread();
+            // await UniTask.SwitchToMainThread();
 
             textureNoRotate.LoadRawTextureData(RGBimage);
             // result.SetPixels32(rotateTexture(textureNoRotate, true));
@@ -524,12 +527,9 @@ public class ObjectDetection : MonoBehaviour
 
         frame.text = $"{GetLabelName(result.classID)} : {(int)(result.score * 100)}%";
         var rt = frame.transform as RectTransform;
-        // var newPos = new Vector2(result.rect.position.x, (result.rect.position.y * 6 + 1) / 8f);
         rt.anchoredPosition = result.rect.position * size - size * 0.5f;
-        // rt.anchoredPosition = newPos * size - size * 0.5f;
-        // var newSize = new Vector2(result.rect.size.x, result.rect.size.y * 0.75f);
+
         rt.sizeDelta = result.rect.size * size;
-        // rt.sizeDelta = newSize * size;
     }
 
     string GetLabelName(int id)
