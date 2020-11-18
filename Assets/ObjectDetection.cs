@@ -14,10 +14,11 @@ public class ObjectDetection : MonoBehaviour
 {
     Dictionary<int, Color> m_categoryColorMap = new Dictionary<int, Color>()
     {
-        {61, new Color(1f, 0f, 0f, 1f)},
+        {61, new Color(1f, 0f, 0f, 1f)}, //chair
         {72, new Color(0f, 1f, 0f, 1f)},
         {46, new Color(0f, 0f, 1f, 1f)},
-        {73, new Color(1f, 1f, 0f, 1f)}
+        {73, new Color(1f, 1f, 0f, 1f)},
+        {66, new Color(.5f, 0, .5f, 1f)} //dining table
     };
     private float m_minSPDistance = 0.2f;
     private int m_MaxPointCount = 1000;
@@ -25,9 +26,16 @@ public class ObjectDetection : MonoBehaviour
     private List<GameObject> m_ObjectList;
     private Dictionary<int, PointCloudPoint> m_CachedPointsDict;
     private LinkedList<SuperPoint> m_SuperPoints;
+    public LinkedList<SuperPoint> SuperPoints
+    {
+        get
+        {
+            return m_SuperPoints;
+        }
+    }
     public Camera FirstPersonCamera;
     public GameObject objectPoint;
-    private float detectFrequency = 0.25f;
+    private float detectFrequency = 1f;
     private float timePassed = 0f;
     ScreenOrientation m_cachedOrientation = ScreenOrientation.Portrait;
     Texture2D result = null;
@@ -83,19 +91,6 @@ public class ObjectDetection : MonoBehaviour
     {
         Vector3 sumPoint = Vector3.zero;
         int count = 0;
-        // LinkedListNode<Vector3> pointNode;
-        // Debug.Log("cached point count " + m_CachedPoints.Count);
-        // for (pointNode = m_CachedPoints.First; pointNode != null; pointNode = pointNode.Next)
-        // {
-        //     Vector2 pointInScreen = Camera.main.WorldToScreenPoint(pointNode.Value);
-
-        //     Vector2 pointInScreenNormalized = new Vector2((0.2f + pointInScreen.x) / (1.67f * Screen.width), pointInScreen.y / Screen.height);
-        //     if (isPointInsideRect(pointInScreenNormalized, ssdResult.rect))
-        //     {
-        //         sumPoint += pointNode.Value;
-        //         count++;
-        //     }
-        // }
 
         foreach (KeyValuePair<int, PointCloudPoint> pair in m_CachedPointsDict)
         {
@@ -105,7 +100,7 @@ public class ObjectDetection : MonoBehaviour
             {
                 pointInScreenNormalized = new Vector2((pointInScreen.x + (Screen.width / 3)) / (1.67f * Screen.width), pointInScreen.y / Screen.height);
             }
-            else 
+            else
             {
                 pointInScreenNormalized = new Vector2(pointInScreen.x / Screen.width, (pointInScreen.y + (Screen.height / 3)) / (1.67f * Screen.height));
             }
@@ -150,7 +145,7 @@ public class ObjectDetection : MonoBehaviour
                 }
                 else
                 {
-                    sp.list_score.Add(label, 0f);
+                    sp.list_score.Add(label, labelScore);
                 }
 
                 float maxValue = -1f;
@@ -164,7 +159,6 @@ public class ObjectDetection : MonoBehaviour
                     }
                 }
 
-                Debug.Log("Best category " + l);
                 if (m_categoryColorMap.ContainsKey(l))
                 {
                     m_ObjectList[sp.id].GetComponent<MeshRenderer>().material.color = m_categoryColorMap[l];
@@ -199,6 +193,21 @@ public class ObjectDetection : MonoBehaviour
             }
             m_ObjectList.Add(gameObject);
         }
+    }
+
+    public (int, float) GetHighestScoreLabelOfSP(SuperPoint sp)
+    {
+        float maxValue = -1f;
+        int l = 0;
+        foreach (var score in sp.list_score)
+        {
+            if (score.Value > maxValue)
+            {
+                maxValue = score.Value;
+                l = score.Key;
+            }
+        }
+        return (l, maxValue);
     }
 
     float ComputeWv(ref List<SuperPoint> spSubset, Vector3 view, out float vdiff)
@@ -265,11 +274,10 @@ public class ObjectDetection : MonoBehaviour
                 return;
             }
 
-            Debug.Log($"Screen size ({Screen.width}, {Screen.height})");
+            // Debug.Log($"Screen size ({Screen.width}, {Screen.height})");
 
             if (result == null)
             {
-                Debug.Log("result null !!!");
                 textureNoRotate = new Texture2D(image.Width, image.Height, TextureFormat.RGB24, false, false);
                 result = new Texture2D(image.Height, image.Width, TextureFormat.RGB24, false, false);
                 YUVimage = new byte[(int)(image.Width * image.Height * 1.5f)];
@@ -321,8 +329,8 @@ public class ObjectDetection : MonoBehaviour
             {
                 var adjustedBox = AdjustSSDResult(SSDBoxs[i]);
 
-                SetFrame(frames[i], adjustedBox, size);
-                Debug.Log($"Box label {adjustedBox.classID} {GetLabelName(adjustedBox.classID)}, {adjustedBox.rect.ToString()}, {adjustedBox.score}");
+                // SetFrame(frames[i], adjustedBox, size);
+                // Debug.Log($"Box label {adjustedBox.classID} {GetLabelName(adjustedBox.classID)}, {adjustedBox.rect.ToString()}, {adjustedBox.score}");
                 if (SSDBoxs[i].score < 0.5f)
                 {
                     continue;
@@ -337,46 +345,10 @@ public class ObjectDetection : MonoBehaviour
                 }
 
                 var position = (Vector3)objectPos;
-                // var colliders = Physics.OverlapSphere(position, 0.1f, LayerMask.GetMask("CloudPoint"));
-                // if (colliders.Length < 1)
-                // {
-                //     Vector3 lookVector = new Vector3(FirstPersonCamera.transform.position.x - position.x, position.y, FirstPersonCamera.transform.position.z - position.z);
-                //     Quaternion lookCameraRotation = Quaternion.LookRotation(lookVector, Vector3.up);
-                //     var bubbleSpeech = Instantiate(objectPoint, position, lookCameraRotation);
-                //     bubbleSpeech.GetComponent<LabelBubble>().SetText(GetLabelName(adjustedBox.classID));
-                // }
+
                 Vector3 view = (FirstPersonCamera.transform.position - position).normalized;
                 float scale = Mathf.Log((FirstPersonCamera.transform.position - position).magnitude, 2);
                 UpdateSuperPoints(position, SSDBoxs[i].score, SSDBoxs[i].classID, view, scale);
-
-                // gameObject.transform.parent = anchor.transform;
-                // if (SSDBoxs[i].classID == 73) //73: mouse
-                // {
-                //     var positionX = Screen.width * (SSDBoxs[i].rect.xMin + SSDBoxs[i].rect.width / 2);
-                //     var positionY = Screen.height * (SSDBoxs[i].rect.yMin - SSDBoxs[i].rect.height / 2);
-                //     Debug.Log($"Box {SSDBoxs[i].rect.ToString()}");
-                //     Debug.Log($"SSD Raycast Position ({positionX}, {positionY})");
-                //     TrackableHit hitResult;
-                //     if (Frame.Raycast(positionX, positionY, TrackableHitFlags.PlaneWithinBounds, out hitResult)) {
-                //         var hitPlane = hitResult.Trackable as DetectedPlane;
-                //         Debug.Log("mouse hitted!");
-                //         if (hitPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing) 
-                //         {
-                //             if (UpdateFloorOfTheHouse.planeWithTypeDict.ContainsKey(hitPlane))
-                //             {
-                //                 UpdateFloorOfTheHouse.planeWithTypeDict[hitPlane] = 1;
-                //             }
-                //             else
-                //             {
-                //                 Debug.Log("Something wrong!");
-                //             }
-                //         }
-                //     }
-                //     else 
-                //     {
-                //         Debug.Log("No SSD Hit!");
-                //     }
-                // }
             }
 
             YUVhandle.Free();
@@ -430,6 +402,12 @@ public class ObjectDetection : MonoBehaviour
     {
         // m_CachedPoints.Clear();
         m_CachedPointsDict.Clear();
+        m_SuperPoints.Clear();
+        foreach (var obj in m_ObjectList) 
+        {
+            Destroy(obj);
+        }
+        m_ObjectList.Clear();
     }
 
     private void _AddPointToCache(PointCloudPoint point)

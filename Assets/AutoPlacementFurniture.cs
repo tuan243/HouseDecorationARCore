@@ -10,48 +10,130 @@ public class AutoPlacementFurniture : MonoBehaviour
     public Camera FirstPersonCamera;
     public GameObject ManipulatorPrefab;
     public GameObject Furniture;
-    // Update is called once per frame
-    // void Update() 
-    // {
-    //     TrackableHit hit;
-    //     TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
+    private ObjectStorage objectStorage;
+    private ObjectDetection objectDetectionInstance;
 
-    //     if (Frame.Raycast(
-    //         Screen.width / 2, Screen.height / 2, raycastFilter, out hit))
-    //     {
-    //             if ((hit.Trackable is DetectedPlane) &&
-    //             Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
-    //                 hit.Pose.rotation * Vector3.up) < 0)
-    //         {
-    //             Debug.Log("Looking at back of the current DetectedPlane");
-    //             return;
-    //         }
+    void Awake()
+    {
+        objectStorage = GameObject.Find("/ObjectStorage").GetComponent<ObjectStorage>();
+        objectDetectionInstance = GameObject.Find("/SSD").GetComponent<ObjectDetection>();
+    }
 
-    //         var hitPlane = hit.Trackable as DetectedPlane;
-    //         var planeDict = UpdateFloorOfTheHouse.planeWithTypeDict;
-    //         if (planeDict.ContainsKey(hitPlane))
-    //         {
-    //             if (planeDict[hitPlane] == -2) //-2 để đánh dấu những plane đã auto đặt đồ
-    //             {
-    //                 return;
-    //             }
-    //             if (hitPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing
-    //                 && hitPlane.ExtentX * hitPlane.ExtentZ > tableAreaThres)
-    //             {
-    //                 var model = Furniture;
-    //                 Instantiate(model, hitPlane.CenterPose.position, hitPlane.CenterPose.rotation);
+    Vector3 ProjectPointToPlane(Vector3 projectPoint, Vector3 pointInPlane, Vector3 planeNormal)
+    {
+        Vector3 v = projectPoint - pointInPlane;
+        Vector3 d = Vector3.Project(v, planeNormal);
+        return projectPoint - d;
+    }
+    //Auto đặt đồ phòng trống
+    public void AutoPlaceCouchAndTable()
+    {
+        var sofa = objectStorage.allFurnitures[3].furnitures[1];
+        var table = objectStorage.allFurnitures[4].furnitures[3];
 
-    //                 var manipulator =
-    //                     Instantiate(ManipulatorPrefab, hitPlane.CenterPose.position, Quaternion.identity);
+        var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
+                                0f,
+                                FirstPersonCamera.transform.forward.z));
+        var camToItemVectorPoint = 2f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x, 
+                                                            UpdateFloorOfTheHouse.floorY, 
+                                                            FirstPersonCamera.transform.position.z);
+        var itemAlineVector = Vector3.Cross(camToItemVector, Vector3.up).normalized;
 
-    //                 model.transform.parent = manipulator.transform;
+        var tablePosition = camToItemVectorPoint + 0.6f * itemAlineVector;
+        var sofaPosition = camToItemVectorPoint - 0.6f * itemAlineVector;
 
-    //                 var anchor = hitPlane.CreateAnchor(hitPlane.CenterPose);
-    //                 manipulator.transform.parent = anchor.transform;
+        var tableRotation = Quaternion.LookRotation(-itemAlineVector);
+        var sofaRotation = Quaternion.LookRotation(itemAlineVector);
 
-    //                 planeDict[hitPlane] = -2;
-    //             }
-    //         }
-    //     }
-    // }
+        var walls = UpdateFloorOfTheHouse.wallDetectedPlanes;
+        var projectedPoint = Vector3.zero;
+        DetectedPlane nearWall = null;
+        // bool nearWall = false;
+        foreach (DetectedPlane wall in walls) {
+            Plane wallPlane = new Plane(wall.CenterPose.rotation * Vector3.up, wall.CenterPose.position);
+            if (wallPlane.GetDistanceToPoint(camToItemVectorPoint) < 2f)
+            {
+                var planeNormal = wall.CenterPose.rotation * Vector3.up;
+
+                projectedPoint = ProjectPointToPlane(camToItemVectorPoint, wall.CenterPose.position, planeNormal);
+
+                tablePosition = projectedPoint + planeNormal * 0.5f;
+                sofaPosition = projectedPoint + planeNormal * 1.75f;
+
+                tableRotation = Quaternion.LookRotation(planeNormal);
+                sofaRotation = Quaternion.LookRotation(-planeNormal);
+
+                nearWall = wall;
+                break;
+            }
+        }
+
+        var superPoints = objectDetectionInstance.SuperPoints;
+        int i = 0;
+        var chairLocation = Vector3.zero;
+        bool nearChair = false;
+        LinkedListNode<SuperPoint> pointNode; 
+        for (pointNode = superPoints.First; pointNode != null; pointNode = pointNode.Next)
+        {
+            if ((pointNode.Value.loc - camToItemVectorPoint).sqrMagnitude < 3f)
+            {
+                var labelAndScoreSP = objectDetectionInstance.GetHighestScoreLabelOfSP(pointNode.Value);
+                if (labelAndScoreSP.Item1 == 61 && labelAndScoreSP.Item2 > 0.7f) //if label is chair
+                {
+                    if (i == 0)
+                    {
+                        chairLocation = pointNode.Value.loc;
+                    }
+                    else 
+                    {
+                        chairLocation = (chairLocation + pointNode.Value.loc / i) * ((float)i / i + 1);
+                    }
+
+                    nearChair = true;
+                    i++;
+                } 
+            }
+        }
+
+        chairLocation = new Vector3(chairLocation.x, UpdateFloorOfTheHouse.floorY, chairLocation.z);
+
+        // if (nearChair)
+        // {
+        //     if (nearWall != null)
+        //     {
+        //         var wallNormal = nearWall.CenterPose.rotation * Vector3.up;
+        //         var chairProjectToWallPoint = ProjectPointToPlane(chairLocation, nearWall.CenterPose.position, wallNormal);
+        //         tablePosition = chairProjectToWallPoint + wallNormal * 0.5f;
+        //         tableRotation = Quaternion.LookRotation(wallNormal);
+        //     }
+        //     else
+        //     {
+        //         tablePosition = chairLocation + itemAlineVector * 0.5f;
+        //         tableRotation = Quaternion.LookRotation(-itemAlineVector);
+        //     }
+        // }
+
+
+        if (!nearChair)
+        {
+            var sofaPose = new Pose(sofaPosition, sofaRotation);
+            var sofaObject = Instantiate(sofa, sofaPose.position, sofaPose.rotation);
+            var sofaManipulator = Instantiate(ManipulatorPrefab, sofaPose.position, sofaPose.rotation);
+            sofaObject.transform.parent = sofaManipulator.transform;
+            var sofaAnchor = UpdateFloorOfTheHouse.floorDetectedPlane.CreateAnchor(sofaPose);
+            sofaManipulator.transform.parent = sofaAnchor.transform;
+        }
+        var tablePose = new Pose(tablePosition, tableRotation);
+        var tableObject = Instantiate(table, tablePose.position, tablePose.rotation);
+
+        var tableManipulator = Instantiate(ManipulatorPrefab, tablePose.position, tablePose.rotation);
+        tableObject.transform.parent = tableManipulator.transform;
+        var tableAnchor = UpdateFloorOfTheHouse.floorDetectedPlane.CreateAnchor(tablePose);
+        
+        tableManipulator.transform.parent = tableAnchor.transform;
+    }
+    public void AIButtonClicked() 
+    {
+        Debug.Log("AI is running!!! :)");
+    }
 }

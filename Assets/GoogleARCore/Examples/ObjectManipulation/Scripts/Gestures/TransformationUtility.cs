@@ -266,7 +266,7 @@ namespace GoogleARCore.Examples.ObjectManipulationInternal
                 foreach (DetectedPlane wall in walls) {
                     Plane wallPlane = new Plane(wall.CenterPose.rotation * Vector3.up, wall.CenterPose.position);
                     if (wallPlane.Raycast(cameraRay, out enter)) {
-                        Debug.Log("enter " + enter);
+                        // Debug.Log("enter " + enter);
                         if (enter < hittedWallEnter) {
                             hittedWallEnter = enter;
                             hangingPoint = cameraRay.GetPoint(enter);
@@ -275,7 +275,7 @@ namespace GoogleARCore.Examples.ObjectManipulationInternal
                     }
                 }
 
-                Debug.Log("hanging point: " + hangingPoint);
+                // Debug.Log("hanging point: " + hangingPoint);
 
                 if (hangingPoint != Vector3.zero) {
                     result.HoveringPosition = hangingPoint;
@@ -284,7 +284,7 @@ namespace GoogleARCore.Examples.ObjectManipulationInternal
                 }
             }
 
-            Debug.Log("translation mode " + translationMode);
+            // Debug.Log("translation mode " + translationMode);
             if (translationMode == TranslationMode.HorizontalDownWard) {
                 Plane groundingPlane =
                     new Plane(Vector3.down, new Vector3(0.0f, UpdateFloorOfTheHouse.ceilingY, 0.0f));

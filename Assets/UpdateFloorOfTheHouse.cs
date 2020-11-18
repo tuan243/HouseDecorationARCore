@@ -19,19 +19,20 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
 
     private float difThreshold = 0.05f;
     private float lowestPossibleFloor = -3f;
-    private float minWallArea = 1f;
+    private float minWallArea = .8f;
 
     void Update()
     {
         // Check that motion tracking is tracking.
         if (Session.Status == SessionStatus.LostTracking || Session.Status == SessionStatus.NotTracking)
         {
-            floorY = 0;
-            wallDetectedPlanes.Clear();
+            // floorY = 0;
         }
 
         if (Session.Status != SessionStatus.Tracking)
         {
+            wallDetectedPlanes.Clear();
+            planeWithTypeDict.Clear();
             return;
         }
 
@@ -65,6 +66,16 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
         {
             if (plane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
             {
+                //bỏ những mặt phẳng đã bị nuốt bởi mặt phẳng khác
+                // if (plane.SubsumedBy != null) 
+                // {
+                //     if (planeWithTypeDict.ContainsKey(plane))
+                //     {
+                //         planeWithTypeDict.Remove(plane);
+                //     }
+                    
+                //     return;
+                // }
                 //-1: ground;
                 //0: undefined;
                 //1: dining table;
@@ -77,6 +88,7 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
                 {
                     type = 0;
                 }
+
                 if (!planeWithTypeDict.ContainsKey(plane))
                 {
                     planeWithTypeDict.Add(plane, type);
