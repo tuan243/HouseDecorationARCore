@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using GoogleARCore.Examples.ObjectManipulation;
 
 public static class ButtonExtension
 {
@@ -25,22 +26,6 @@ public static class ButtonExtension
 }
 public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    // [Serializable]
-    // public struct FurnitureGroup
-    // {
-    //     public string categoryName;
-    //     public List<Furniture> furnitures;
-    // }
-
-    // [Serializable]
-    // public struct Furniture
-    // {
-    //     public Sprite Icon;
-    //     public GameObject model;
-    // }
-    // public GameObject categoryButton;
-    // public GameObject furnitureButton;
-    // public List<FurnitureGroup> allFurnitures;
     public GameObject categoryButton;
     public GameObject furnitureButton;
     private ObjectStorage objectStorage;
@@ -49,6 +34,8 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     private List<List<GameObject>> allFurnituresButton;
     private int choosingCategoryIndex = 0;
     public static bool wasClickedOnUI = false;
+    public GameObject manipulatorPrefab;
+    public Camera FirstPersonCamera;
     void Awake()
     {
         categoryButtonsContainer = transform.Find("FurCategoryListView/Content");
@@ -92,6 +79,18 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void FurButtonClick(int categoryIndex, int furIndex)
     {
         Debug.Log($"i {categoryIndex} j {furIndex}");
+        var choosenFur = objectStorage.allFurnitures[categoryIndex].furnitures[furIndex];
+
+        var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
+                                        0f,
+                                        FirstPersonCamera.transform.forward.z));
+        var camToItemVectorPoint = 2f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
+                                                            UpdateFloorOfTheHouse.floorY,
+                                                            FirstPersonCamera.transform.position.z);
+        var itemRotation = Quaternion.LookRotation(-camToItemVector); // hướng đồ vật vào mặt mình
+        var itemPose = new Pose(camToItemVectorPoint, itemRotation);
+
+        InstantiateFurniture(choosenFur, itemPose);
     }
 
     public void CategoryButtonClick(int categoryIndex)
@@ -117,5 +116,19 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         Debug.Log("Pointer up!");
         wasClickedOnUI = false;
+    }
+
+    void InstantiateFurniture(GameObject objectPrefab, Pose pose)
+    {
+        Debug.Log($"Floor detected plane is null? {(UpdateFloorOfTheHouse.floorDetectedPlane == null).ToString()}");
+        if (UpdateFloorOfTheHouse.floorDetectedPlane == null)
+        {
+            return;
+        }
+        var anchor = UpdateFloorOfTheHouse.floorDetectedPlane.CreateAnchor(pose);
+        var manipulator = Instantiate(manipulatorPrefab, pose.position, pose.rotation, anchor.transform);
+        var gameObject = Instantiate(objectPrefab, pose.position, pose.rotation, manipulator.transform);
+
+        manipulator.GetComponent<Manipulator>().Select();
     }
 }

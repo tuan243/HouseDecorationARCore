@@ -10,33 +10,30 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
     public static float ceilingY = 0f;
     public static DetectedPlane floorDetectedPlane;
     public static DetectedPlane ceilingDetectedPlane;
-
     public static HashSet<DetectedPlane> wallDetectedPlanes = new HashSet<DetectedPlane>();
-
     public static Dictionary<DetectedPlane, int> planeWithTypeDict = new Dictionary<DetectedPlane, int>();
-
     private List<DetectedPlane> m_NewPlanes = new List<DetectedPlane>();
-
-    private float difThreshold = 0.05f;
+    private float difThreshold = 0.1f;
     private float lowestPossibleFloor = -3f;
     private float minWallArea = .8f;
 
     void Update()
     {
         // Check that motion tracking is tracking.
-        if (Session.Status == SessionStatus.LostTracking || Session.Status == SessionStatus.NotTracking)
-        {
-            // floorY = 0;
-        }
+        // if (Session.Status == SessionStatus.LostTracking || Session.Status == SessionStatus.NotTracking)
+        // {
+        //     // floorY = 0;
+        // }
 
         if (Session.Status != SessionStatus.Tracking)
         {
+            floorY = 0;
             wallDetectedPlanes.Clear();
             planeWithTypeDict.Clear();
             return;
         }
 
-        Session.GetTrackables<DetectedPlane>(m_NewPlanes, TrackableQueryFilter.Updated);
+        Session.GetTrackables<DetectedPlane>(m_NewPlanes, TrackableQueryFilter.All);
         for (int i = 0; i < m_NewPlanes.Count; i++)
         {
             if (m_NewPlanes[i].SubsumedBy != null || m_NewPlanes[i].CenterPose.position.y < lowestPossibleFloor)
@@ -60,46 +57,46 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
             }
         }
 
-        List<DetectedPlane> allPlanes = new List<DetectedPlane>();
-        Session.GetTrackables<DetectedPlane>(allPlanes);
-        foreach (var plane in allPlanes)
-        {
-            if (plane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
-            {
-                //bỏ những mặt phẳng đã bị nuốt bởi mặt phẳng khác
-                // if (plane.SubsumedBy != null) 
-                // {
-                //     if (planeWithTypeDict.ContainsKey(plane))
-                //     {
-                //         planeWithTypeDict.Remove(plane);
-                //     }
+        // List<DetectedPlane> allPlanes = new List<DetectedPlane>();
+        // Session.GetTrackables<DetectedPlane>(allPlanes);
+        // foreach (var plane in allPlanes)
+        // {
+        //     if (plane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
+        //     {
+        //         //bỏ những mặt phẳng đã bị nuốt bởi mặt phẳng khác
+        //         // if (plane.SubsumedBy != null) 
+        //         // {
+        //         //     if (planeWithTypeDict.ContainsKey(plane))
+        //         //     {
+        //         //         planeWithTypeDict.Remove(plane);
+        //         //     }
                     
-                //     return;
-                // }
-                //-1: ground;
-                //0: undefined;
-                //1: dining table;
-                int type = 0;
-                if (Mathf.Abs(plane.CenterPose.position.y - floorY) < 0.3)
-                {
-                    type = -1;
-                }
-                else
-                {
-                    type = 0;
-                }
+        //         //     return;
+        //         // }
+        //         //-1: ground;
+        //         //0: undefined;
+        //         //1: dining table;
+        //         int type = 0;
+        //         if (Mathf.Abs(plane.CenterPose.position.y - floorY) < 0.3)
+        //         {
+        //             type = -1;
+        //         }
+        //         else
+        //         {
+        //             type = 0;
+        //         }
 
-                if (!planeWithTypeDict.ContainsKey(plane))
-                {
-                    planeWithTypeDict.Add(plane, type);
-                }
-                else if (planeWithTypeDict[plane] != 1)
-                {
-                    planeWithTypeDict[plane] = type;
-                }
+        //         if (!planeWithTypeDict.ContainsKey(plane))
+        //         { 
+        //             planeWithTypeDict.Add(plane, type);
+        //         }
+        //         else if (planeWithTypeDict[plane] != 1)
+        //         {
+        //             planeWithTypeDict[plane] = type;
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         transform.position = new Vector3(transform.position.x, floorY, transform.position.z);
 
@@ -111,7 +108,7 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
         if (aRPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
         {
             float planeY = aRPlane.CenterPose.position.y;
-            if (floorY - planeY > difThreshold)
+            if (floorY - planeY >= difThreshold)
             {
                 return true;
             }

@@ -9,7 +9,6 @@ public class AutoPlacementFurniture : MonoBehaviour
     float tableAreaThres = 1f;
     public Camera FirstPersonCamera;
     public GameObject ManipulatorPrefab;
-    public GameObject Furniture;
     private ObjectStorage objectStorage;
     private ObjectDetection objectDetectionInstance;
 

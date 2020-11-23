@@ -379,6 +379,7 @@ public class ObjectDetection : MonoBehaviour
         if (Session.Status != SessionStatus.Tracking)
         {
             _ClearCachedPoints();
+            return;
         }
 
         timePassed += Time.deltaTime;
