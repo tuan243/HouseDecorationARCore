@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using GoogleARCore.Examples.ObjectManipulation;
-
+using GoogleARCore;
 public static class ButtonExtension
 {
     public static void AddEventListener<T1, T2>(this Button button, T1 param1, T2 param2, Action<T1, T2> OnClick)
@@ -84,13 +84,41 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
                                         0f,
                                         FirstPersonCamera.transform.forward.z));
-        var camToItemVectorPoint = 2f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
+        var camToItemVectorPoint = 1f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
                                                             UpdateFloorOfTheHouse.floorY,
                                                             FirstPersonCamera.transform.position.z);
         var itemRotation = Quaternion.LookRotation(-camToItemVector); // hướng đồ vật vào mặt mình
-        var itemPose = new Pose(camToItemVectorPoint, itemRotation);
 
-        InstantiateFurniture(choosenFur, itemPose);
+        List<TrackableHit> hitResults = new List<TrackableHit>();
+        TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
+
+        Vector3 raycastPoint = new Vector3(camToItemVectorPoint.x, 0, camToItemVectorPoint.z);
+        if (Frame.RaycastAll(raycastPoint, Vector3.down, hitResults, 1.5f, raycastFilter))
+        {
+            foreach (var hit in hitResults)
+            {
+                if ((hit.Trackable is DetectedPlane) &&
+                    Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
+                        hit.Pose.rotation * Vector3.up) < 0)
+                {
+                    Debug.Log("Hit at back of the current DetectedPlane");
+                    continue;
+                }
+
+                DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
+                if (hitPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
+                {
+                    var itemPose = new Pose(hit.Pose.position, itemRotation);
+                    InstantiateFurniture(choosenFur, itemPose, hitPlane);
+                    return;
+                }
+            }
+        }
+        else 
+        {
+            var itemPose = new Pose(camToItemVectorPoint, itemRotation);
+            InstantiateFurniture(choosenFur, itemPose, UpdateFloorOfTheHouse.floorDetectedPlane);
+        }
     }
 
     public void CategoryButtonClick(int categoryIndex)
@@ -109,23 +137,21 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerDown(PointerEventData eventData)
     {
         wasClickedOnUI = true;
-        Debug.Log("Do nothing!");
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("Pointer up!");
         wasClickedOnUI = false;
     }
 
-    void InstantiateFurniture(GameObject objectPrefab, Pose pose)
+    void InstantiateFurniture(GameObject objectPrefab, Pose pose, DetectedPlane arPlane)
     {
         Debug.Log($"Floor detected plane is null? {(UpdateFloorOfTheHouse.floorDetectedPlane == null).ToString()}");
-        if (UpdateFloorOfTheHouse.floorDetectedPlane == null)
+        if (arPlane == null)
         {
             return;
         }
-        var anchor = UpdateFloorOfTheHouse.floorDetectedPlane.CreateAnchor(pose);
+        var anchor = arPlane.CreateAnchor(pose);
         var manipulator = Instantiate(manipulatorPrefab, pose.position, pose.rotation, anchor.transform);
         var gameObject = Instantiate(objectPrefab, pose.position, pose.rotation, manipulator.transform);
 

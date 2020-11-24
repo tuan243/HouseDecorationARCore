@@ -108,7 +108,7 @@ namespace GoogleARCore.Examples.ObjectManipulation
             {
                 // Use hit pose and camera pose to check if hittest is from the
                 // back of the plane, if it is, no need to create the anchor.
-                Debug.Log("gesture position " + gesture.StartPosition.ToString()); 
+                // Debug.Log("gesture position " + gesture.StartPosition.ToString()); 
                 if ((hit.Trackable is DetectedPlane) &&
                     Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
                         hit.Pose.rotation * Vector3.up) < 0)
