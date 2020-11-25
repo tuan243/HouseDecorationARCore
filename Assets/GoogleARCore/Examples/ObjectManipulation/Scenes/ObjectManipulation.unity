@@ -273,20 +273,20 @@ MonoBehaviour:
     icons:
     - {fileID: 21300000, guid: e15d5f00da521af4da652ebbf018edd4, type: 3}
     - {fileID: 21300000, guid: e496552adbd6cc04ab3deceff0694ddc, type: 3}
+    - {fileID: 21300000, guid: 69a1cf1bb962630439d9b964239c95f5, type: 3}
+    - {fileID: 21300000, guid: 3b3bca56633d0744a92d72e1e9d700c6, type: 3}
+    - {fileID: 21300000, guid: d6d3abdd768b6a8449ab714712c50b1e, type: 3}
+    - {fileID: 21300000, guid: 0b150ce7940743c4a8001d0d72537936, type: 3}
+    - {fileID: 21300000, guid: a89b8c9dec3c99540bef7d95a033e3a0, type: 3}
+    - {fileID: 21300000, guid: 0fe85222ddd6e31429e0a16e42d38ea5, type: 3}
+    - {fileID: 21300000, guid: 2facd09cd1603e3458b371f10e1f0ae5, type: 3}
+    - {fileID: 21300000, guid: 658a6e7d3992cb54489ea4fe23a5de32, type: 3}
+    - {fileID: 21300000, guid: 6319e94bdfbbe234bbb96547422ea2f0, type: 3}
     - {fileID: 21300000, guid: cc8e5113058230c47aefb260e1fb7fc2, type: 3}
     - {fileID: 21300000, guid: 80168f5b5c906fb4da540b8099114656, type: 3}
     - {fileID: 21300000, guid: 8deb9e53de1ddae4db5611ceb57b6b92, type: 3}
     - {fileID: 21300000, guid: a4b9389b8dd624746ac957e6b9b714f4, type: 3}
     - {fileID: 21300000, guid: 3bb255263da84ce40bbdbf91166cf937, type: 3}
-    - {fileID: 21300000, guid: 99bfd7e13ec371a4fbf17b73fb02b6d9, type: 3}
-    - {fileID: 21300000, guid: 692fb96fecb528d45b76550f2d0af69f, type: 3}
-    - {fileID: 21300000, guid: fdc4b6cf1c366384b94244ca71614130, type: 3}
-    - {fileID: 21300000, guid: 0212f3335e2f40345973569db4111b1f, type: 3}
-    - {fileID: 21300000, guid: 23f793dc51a896f4f9e925ec2c8e262e, type: 3}
-    - {fileID: 21300000, guid: 4e0974a65c998c64eaf7618af1f4f76d, type: 3}
-    - {fileID: 21300000, guid: d770f7e1f94afe746b03b4098c45bbd5, type: 3}
-    - {fileID: 21300000, guid: 977e44e9fbdaff14a97268ae1323f200, type: 3}
-    - {fileID: 21300000, guid: 09f087052d5d9064ca26cdb4322e6914, type: 3}
     - {fileID: 21300000, guid: 819cfc7e78f9b814d88ce120f317a18a, type: 3}
     - {fileID: 21300000, guid: 0609bb68bbc5f104a8833624db77f0e6, type: 3}
     - {fileID: 21300000, guid: f91483b3cacd7e54f9cd8ea1acbe44e5, type: 3}
@@ -414,6 +414,35 @@ MonoBehaviour:
     - {fileID: 21300000, guid: b73a089c2870e364a9b309ef7edb7313, type: 3}
     - {fileID: 21300000, guid: 85f78a67e4a89dd438462fd804f9cd52, type: 3}
     - {fileID: 21300000, guid: edd860eed289f374e94997c3380e8f10, type: 3}
+  - categoryName: Wall
+    furnitures:
+    - {fileID: 5138361316289329637, guid: 6fac464c851fa6d40946fa15822020a1, type: 3}
+    - {fileID: 4674757993962464544, guid: f795ae91c09b35c45ae35a7a2615151a, type: 3}
+    - {fileID: 5276152107324956384, guid: af2669b571c3c2a428f51b65fd127467, type: 3}
+    - {fileID: 87680600328408261, guid: 12dbf1419c6a9b44e919c18da63afd00, type: 3}
+    - {fileID: 3253109556515733358, guid: 495dc98a0248ec14cab88e93ad08dd4b, type: 3}
+    - {fileID: 7886549257864248823, guid: 430a9a630c7eacb4da5b6185618f7772, type: 3}
+    - {fileID: 813392943104660141, guid: 452e637b5042f0c4997f765ba3a7ff94, type: 3}
+    - {fileID: 7308966051879640843, guid: 1f4b644a55f11614c8478e4bd546d444, type: 3}
+    - {fileID: 7029857916773360415, guid: c5e79e73626f1e3468fe00811bdd171c, type: 3}
+    - {fileID: 3734568613260517598, guid: 1a8fee16e79f9b3449ce13dd9d93b7a5, type: 3}
+    - {fileID: 732673269186148149, guid: d116a38e400927b4d8414c345782362c, type: 3}
+    - {fileID: 4957017262912859414, guid: 9423c6a8ceacc7d42972e6ec308e5cab, type: 3}
+    - {fileID: 4683724420508764210, guid: 80ce71ebc02cde24fa62f500f611aa04, type: 3}
+    icons:
+    - {fileID: 21300000, guid: cfbde476d954cc84db8d22ea860c9686, type: 3}
+    - {fileID: 21300000, guid: e5744eae80af1394b95da47fc94261a7, type: 3}
+    - {fileID: 21300000, guid: 72f114b248d3a734e882a39ac148c40c, type: 3}
+    - {fileID: 21300000, guid: d9663716dc44b584ab0a00bbabdb1fb1, type: 3}
+    - {fileID: 21300000, guid: e1a5921d3b881074ea0fd2e0cb595e5d, type: 3}
+    - {fileID: 21300000, guid: 97a4a0f6650940f4aa348d898a142e17, type: 3}
+    - {fileID: 21300000, guid: 962864973eedafa4ca606a5bcbf722ac, type: 3}
+    - {fileID: 21300000, guid: 6a6ceec5190442f489829ce90cc0c3ff, type: 3}
+    - {fileID: 21300000, guid: 4964748a895ba4f4ca319fb10711daf3, type: 3}
+    - {fileID: 21300000, guid: 2a588fde4c72902458915b107b477280, type: 3}
+    - {fileID: 21300000, guid: 331ca25e5b91dc84b89a2c1ecf564ec1, type: 3}
+    - {fileID: 21300000, guid: 4541f97ebb3fbcf4e81aea1c752fc686, type: 3}
+    - {fileID: 21300000, guid: 4a5e869438384ec4bb99477979026b85, type: 3}
 --- !u!1 &190932871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1384,7 +1413,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1565,7 +1594,7 @@ MonoBehaviour:
   m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: 0.135
+  m_DecelerationRate: 0.05
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 0}
   m_HorizontalScrollbar: {fileID: 0}
@@ -2229,6 +2258,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4461716624848968, guid: cf498fc35b538884db557f7a9a2c0ef9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf498fc35b538884db557f7a9a2c0ef9, type: 3}
 --- !u!1 &1812720041
@@ -2523,10 +2556,10 @@ RectTransform:
   m_Father: {fileID: 1208770416}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2069683693
 MonoBehaviour:

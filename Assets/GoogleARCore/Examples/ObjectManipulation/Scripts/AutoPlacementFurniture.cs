@@ -53,7 +53,7 @@ public class AutoPlacementFurniture : MonoBehaviour
             if (wallPlane.GetDistanceToPoint(camToItemVectorPoint) < 2f)
             {
                 var planeNormal = wall.CenterPose.rotation * Vector3.up;
-
+                
                 projectedPoint = ProjectPointToPlane(camToItemVectorPoint, wall.CenterPose.position, planeNormal);
 
                 tablePosition = projectedPoint + planeNormal * 0.5f;

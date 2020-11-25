@@ -79,6 +79,7 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void FurButtonClick(int categoryIndex, int furIndex)
     {
         Debug.Log($"i {categoryIndex} j {furIndex}");
+        
         var choosenFur = objectStorage.allFurnitures[categoryIndex].furnitures[furIndex];
 
         var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
@@ -88,6 +89,38 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                                                             UpdateFloorOfTheHouse.floorY,
                                                             FirstPersonCamera.transform.position.z);
         var itemRotation = Quaternion.LookRotation(-camToItemVector); // hướng đồ vật vào mặt mình
+
+        if (categoryIndex == objectStorage.allFurnitures.Count - 1) //last index is wall furniture
+        {
+            var walls = UpdateFloorOfTheHouse.wallDetectedPlanes;
+            var projectedPoint = Vector3.zero;
+
+            foreach (DetectedPlane wall in walls) {
+                Plane wallPlane = new Plane(wall.CenterPose.rotation * Vector3.up, wall.CenterPose.position);
+                if (wallPlane.GetDistanceToPoint(camToItemVectorPoint) < 1f)
+                {
+                    var planeNormal = wall.CenterPose.rotation * Vector3.up;
+
+                    Ray ray = new Ray(FirstPersonCamera.transform.position, camToItemVector);
+
+                    float enter;
+
+                    if (wallPlane.Raycast(ray, out enter))
+                    {
+                        projectedPoint = ray.GetPoint(enter);
+                        
+                        var itemPose = new Pose(projectedPoint, 
+                                    Quaternion.LookRotation(Vector3.up, wall.CenterPose.rotation * Vector3.up));
+
+                        InstantiateFurniture(choosenFur, itemPose, wall);
+                    }
+
+                    break;
+                }
+            }
+            
+            return;
+        }
 
         List<TrackableHit> hitResults = new List<TrackableHit>();
         TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
@@ -128,6 +161,8 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             allFurnituresButton[choosingCategoryIndex][i].SetActive(false);
         }
         choosingCategoryIndex = categoryIndex;
+        furButtonsContainer.transform.parent.GetComponent<ScrollRect>().velocity = Vector2.zero;
+        furButtonsContainer.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         for (int i = 0; i < objectStorage.allFurnitures[choosingCategoryIndex].furnitures.Count; i++)
         {
             allFurnituresButton[choosingCategoryIndex][i].SetActive(true);
