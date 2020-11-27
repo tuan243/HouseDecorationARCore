@@ -53,7 +53,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         allFurnituresButton = new List<List<GameObject>>();
         for (int i = 0; i < objectStorage.allFurnitures.Count; i++)
         {
-            // Debug.Log("Oh my god!! " + i);
             allFurnituresButton.Add(new List<GameObject>());
 
             var catBtn = Instantiate(categoryButton, categoryButtonsContainer);
@@ -78,8 +77,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void FurButtonClick(int categoryIndex, int furIndex)
     {
-        Debug.Log($"i {categoryIndex} j {furIndex}");
-        
         var choosenFur = objectStorage.allFurnitures[categoryIndex].furnitures[furIndex];
 
         var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
@@ -94,10 +91,13 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         {
             var walls = UpdateFloorOfTheHouse.wallDetectedPlanes;
             var projectedPoint = Vector3.zero;
-
+            if (walls.Count == 0)
+            {
+                Debug.Log("wall is empty :(");
+            }
             foreach (DetectedPlane wall in walls) {
                 Plane wallPlane = new Plane(wall.CenterPose.rotation * Vector3.up, wall.CenterPose.position);
-                if (wallPlane.GetDistanceToPoint(camToItemVectorPoint) < 1f)
+                if (wallPlane.GetDistanceToPoint(camToItemVectorPoint) < 1.2f)
                 {
                     var planeNormal = wall.CenterPose.rotation * Vector3.up;
 
@@ -113,9 +113,14 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                                     Quaternion.LookRotation(Vector3.up, wall.CenterPose.rotation * Vector3.up));
 
                         InstantiateFurniture(choosenFur, itemPose, wall);
+                        Debug.Log("Yeah");
                     }
 
                     break;
+                }
+                else
+                {
+                    Debug.Log("Not reach wall :(");
                 }
             }
             

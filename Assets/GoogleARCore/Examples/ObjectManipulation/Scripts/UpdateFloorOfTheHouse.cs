@@ -14,8 +14,8 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
     public static Dictionary<DetectedPlane, int> planeWithTypeDict = new Dictionary<DetectedPlane, int>();
     private List<DetectedPlane> m_NewPlanes = new List<DetectedPlane>();
     private float difThreshold = 0.1f;
-    private float lowestPossibleFloor = -3f;
-    private float minWallArea = .8f;
+    private float lowestPossibleFloor = -2f;
+    private float minWallArea = .6f;
 
     void Update()
     {

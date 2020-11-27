@@ -274,8 +274,6 @@ public class ObjectDetection : MonoBehaviour
                 return;
             }
 
-            // Debug.Log($"Screen size ({Screen.width}, {Screen.height})");
-
             if (result == null)
             {
                 textureNoRotate = new Texture2D(image.Width, image.Height, TextureFormat.RGB24, false, false);
@@ -310,7 +308,6 @@ public class ObjectDetection : MonoBehaviour
             if (k != 0)
             {
                 runningSSD = false;
-                Debug.LogWarning("Color conversion - k != 0");
                 return;
             }
             // await UniTask.SwitchToMainThread();
@@ -329,8 +326,6 @@ public class ObjectDetection : MonoBehaviour
             {
                 var adjustedBox = AdjustSSDResult(SSDBoxs[i]);
 
-                // SetFrame(frames[i], adjustedBox, size);
-                // Debug.Log($"Box label {adjustedBox.classID} {GetLabelName(adjustedBox.classID)}, {adjustedBox.rect.ToString()}, {adjustedBox.score}");
                 if (SSDBoxs[i].score < 0.5f)
                 {
                     continue;
@@ -340,7 +335,6 @@ public class ObjectDetection : MonoBehaviour
 
                 if (objectPos == null)
                 {
-                    Debug.Log("NO POINT CLOUD IN BOUNDING BOX!");
                     continue;
                 }
 
