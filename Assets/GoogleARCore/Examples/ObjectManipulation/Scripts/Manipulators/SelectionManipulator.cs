@@ -121,7 +121,48 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         protected override void OnSelected()
         {
+            var boxCollider = gameObject.GetComponentInChildren<BoxCollider>();
+            var transformMesh = boxCollider.transform;
             SelectionVisualization.SetActive(true);
+
+            if (boxCollider != null)
+            {
+                float diameter = 1f;
+                var dotForward = Mathf.Abs(Vector3.Dot(transformMesh.forward, Vector3.up));
+                var dotRight = Mathf.Abs(Vector3.Dot(transformMesh.right, Vector3.up));
+                var dotUp = Mathf.Abs(Vector3.Dot(transformMesh.up, Vector3.up));
+                if (dotForward > dotRight)
+                {
+                    if (dotForward > dotUp)
+                    {
+                        diameter = boxCollider.size.x > boxCollider.size.y ?
+                            boxCollider.size.x * transformMesh.localScale.x : boxCollider.size.y * transformMesh.localScale.y;
+                    }
+                    else
+                    {
+                        diameter = boxCollider.size.x > boxCollider.size.z ?
+                            boxCollider.size.x * transformMesh.localScale.x : boxCollider.size.z * transformMesh.localScale.z;
+                    }
+                }
+                else
+                {
+                    if (dotRight > dotUp)
+                    {
+                        diameter = boxCollider.size.y > boxCollider.size.z ?
+                            boxCollider.size.y * transformMesh.localScale.y : boxCollider.size.z * transformMesh.localScale.z;
+                    }
+                    else
+                    {
+                        diameter = boxCollider.size.x > boxCollider.size.z ?
+                            boxCollider.size.x * transformMesh.localScale.x : boxCollider.size.z * transformMesh.localScale.z;
+                    }
+                }
+                SelectionVisualization.transform.localScale = new Vector3(diameter * 5f, diameter * 5f, diameter * 5f); //2 unit diameter -> 10 scale
+            }
+            else 
+            {
+                Debug.Log("No box collider found!");
+            }
         }
 
         /// <summary>

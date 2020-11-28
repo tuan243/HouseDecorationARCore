@@ -12,6 +12,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 public class ObjectDetection : MonoBehaviour
 {
+    int[] ssdLabelUsedList = {61, 62, 64, 66};
     Dictionary<int, Color> m_categoryColorMap = new Dictionary<int, Color>()
     {
         {61, new Color(1f, 0f, 0f, 1f)}, //chair
@@ -20,7 +21,7 @@ public class ObjectDetection : MonoBehaviour
         {73, new Color(1f, 1f, 0f, 1f)},
         {66, new Color(.5f, 0, .5f, 1f)} //dining table
     };
-    private float m_minSPDistance = 0.2f;
+    private float m_minSPDistance = 1f;
     private int m_MaxPointCount = 1000;
     private LinkedList<Vector3> m_CachedPoints;
     private List<GameObject> m_ObjectList;
@@ -324,12 +325,13 @@ public class ObjectDetection : MonoBehaviour
 
             for (int i = 0; i < 10; i++)
             {
-                var adjustedBox = AdjustSSDResult(SSDBoxs[i]);
-
-                if (SSDBoxs[i].score < 0.5f)
+                if (!ssdLabelUsedList.Contains(SSDBoxs[i].classID) || SSDBoxs[i].score < 0.5f)
                 {
                     continue;
                 }
+
+                var adjustedBox = AdjustSSDResult(SSDBoxs[i]);
+
 
                 var objectPos = getMedianObjectPoint(adjustedBox);
 

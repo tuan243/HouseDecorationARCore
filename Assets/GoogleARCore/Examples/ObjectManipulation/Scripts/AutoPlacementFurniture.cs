@@ -90,8 +90,8 @@ public class AutoPlacementFurniture : MonoBehaviour
         var leftVector = Vector3.Cross(lookingVector, Vector3.up);
         tablePosition = lookingPoint - 0.6f * leftVector;
         sofaPosition = lookingPoint + 0.6f * leftVector;
-        pottedPlantPosition = sofaPosition - 0.5f * lookingVector;
-        shellPosition = sofaPosition + 1f * lookingVector;
+        pottedPlantPosition = lookingPoint + 0.8f * leftVector - 0.6f * lookingVector;
+        shellPosition = lookingPoint + 0.75f * leftVector + 1f * lookingVector;
 
         tableRotation = Quaternion.LookRotation(leftVector);
         sofaRotation = Quaternion.LookRotation(-leftVector);
@@ -222,7 +222,6 @@ public class AutoPlacementFurniture : MonoBehaviour
         var camToItemVectorPoint = 2f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
                                                             UpdateFloorOfTheHouse.floorY,
                                                             FirstPersonCamera.transform.position.z);
-        // var itemRotation = Quaternion.LookRotation(-camToItemVector); // hướng đồ vật vào mặt mình
 
         Vector3 tableLocation;
         if (IsItemNearBy(camToItemVectorPoint, 66, out tableLocation)) //66: dining table
