@@ -185,7 +185,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122865395318488}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b8b0bad76a8e4a738051b49934fef4f, type: 3}
   m_Name: 
@@ -204,9 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 035bca4b574dc4a2a8d83b85d750c600, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObjectTranslationMode: 2
   MaxTranslationDistance: 100
-  floor: {fileID: 6937025481651904340, guid: 82230c0970aa6bc488bfab71e884f7e5, type: 3}
 --- !u!114 &114264350914666538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +224,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1122865395318488}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d014c88442c3426196157d7d199feed, type: 3}
   m_Name: 

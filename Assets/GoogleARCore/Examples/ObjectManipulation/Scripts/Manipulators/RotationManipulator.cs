@@ -37,20 +37,20 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// </summary>
         /// <param name="gesture">The current gesture.</param>
         /// <returns>True if the manipulation can be started.</returns>
-        protected override bool CanStartManipulationForGesture(DragGesture gesture)
-        {
-            if (!IsSelected())
-            {
-                return false;
-            }
+        // protected override bool CanStartManipulationForGesture(DragGesture gesture)
+        // {
+        //     if (!IsSelected())
+        //     {
+        //         return false;
+        //     }
 
-            if (gesture.TargetObject != null)
-            {
-                return false;
-            }
+        //     if (gesture.TargetObject != null)
+        //     {
+        //         return false;
+        //     }
 
-            return true;
-        }
+        //     return true;
+        // }
 
         /// <summary>
         /// Returns true if the manipulation can be started for the given Twist gesture.
@@ -76,18 +76,18 @@ namespace GoogleARCore.Examples.ObjectManipulation
         /// Rotates the object around the y-axis via a Drag gesture.
         /// </summary>
         /// <param name="gesture">The current drag gesture.</param>
-        protected override void OnContinueManipulation(DragGesture gesture)
-        {
-            float sign = -1.0f;
-            Vector3 forward = Camera.main.transform.TransformPoint(Vector3.forward);
-            Quaternion WorldToVerticalOrientedDevice =
-                Quaternion.Inverse(Quaternion.LookRotation(forward, Vector3.up));
-            Quaternion DeviceToWorld = Camera.main.transform.rotation;
-            Vector3 rotatedDelta = WorldToVerticalOrientedDevice * DeviceToWorld * gesture.Delta;
+        // protected override void OnContinueManipulation(DragGesture gesture)
+        // {
+        //     float sign = -1.0f;
+        //     Vector3 forward = Camera.main.transform.TransformPoint(Vector3.forward);
+        //     Quaternion WorldToVerticalOrientedDevice =
+        //         Quaternion.Inverse(Quaternion.LookRotation(forward, Vector3.up));
+        //     Quaternion DeviceToWorld = Camera.main.transform.rotation;
+        //     Vector3 rotatedDelta = WorldToVerticalOrientedDevice * DeviceToWorld * gesture.Delta;
 
-            float rotationAmount = sign * (rotatedDelta.x / Screen.dpi) * k_RotationRateDegreesDrag;
-            transform.Rotate(0.0f, rotationAmount, 0.0f);
-        }
+        //     float rotationAmount = sign * (rotatedDelta.x / Screen.dpi) * k_RotationRateDegreesDrag;
+        //     transform.Rotate(0.0f, rotationAmount, 0.0f);
+        // }
 
         /// <summary>
         /// Rotates the object around the y-axis via a Twist gesture.
