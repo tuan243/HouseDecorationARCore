@@ -91,6 +91,15 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         {
             var walls = UpdateFloorOfTheHouse.wallDetectedPlanes;
             var projectedPoint = Vector3.zero;
+            TrackableHit hit = new TrackableHit();
+            if (Frame.Raycast(FirstPersonCamera.transform.position, camToItemVector, out hit, 2f))
+            {
+                var itemPose = new Pose(projectedPoint, 
+                            Quaternion.LookRotation(Vector3.up, hit.Pose.rotation * Vector3.up));
+
+                InstantiateFurniture(choosenFur, itemPose, hit.Trackable as DetectedPlane);
+            }
+
             if (walls.Count == 0)
             {
                 Debug.Log("wall is empty :(");
@@ -186,7 +195,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void InstantiateFurniture(GameObject objectPrefab, Pose pose, DetectedPlane arPlane)
     {
-        Debug.Log($"Floor detected plane is null? {(UpdateFloorOfTheHouse.floorDetectedPlane == null).ToString()}");
         if (arPlane == null)
         {
             return;

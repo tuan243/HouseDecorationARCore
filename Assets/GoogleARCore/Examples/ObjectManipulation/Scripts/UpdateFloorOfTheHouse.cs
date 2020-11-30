@@ -57,47 +57,6 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
             }
         }
 
-        // List<DetectedPlane> allPlanes = new List<DetectedPlane>();
-        // Session.GetTrackables<DetectedPlane>(allPlanes);
-        // foreach (var plane in allPlanes)
-        // {
-        //     if (plane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
-        //     {
-        //         //bỏ những mặt phẳng đã bị nuốt bởi mặt phẳng khác
-        //         // if (plane.SubsumedBy != null) 
-        //         // {
-        //         //     if (planeWithTypeDict.ContainsKey(plane))
-        //         //     {
-        //         //         planeWithTypeDict.Remove(plane);
-        //         //     }
-                    
-        //         //     return;
-        //         // }
-        //         //-1: ground;
-        //         //0: undefined;
-        //         //1: dining table;
-        //         int type = 0;
-        //         if (Mathf.Abs(plane.CenterPose.position.y - floorY) < 0.3)
-        //         {
-        //             type = -1;
-        //         }
-        //         else
-        //         {
-        //             type = 0;
-        //         }
-
-        //         if (!planeWithTypeDict.ContainsKey(plane))
-        //         { 
-        //             planeWithTypeDict.Add(plane, type);
-        //         }
-        //         else if (planeWithTypeDict[plane] != 1)
-        //         {
-        //             planeWithTypeDict[plane] = type;
-        //         }
-
-        //     }
-        // }
-
         transform.position = new Vector3(transform.position.x, floorY, transform.position.z);
 
     }
@@ -114,6 +73,11 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
             }
             else if (Mathf.Abs(floorY - planeY) < difThreshold)
             {
+                if (floorDetectedPlane == null)
+                {
+                    return true;
+                }
+
                 if (aRPlane.ExtentX * aRPlane.ExtentZ > floorDetectedPlane.ExtentX * floorDetectedPlane.ExtentZ)
                 {
                     return true;
@@ -146,6 +110,10 @@ public class UpdateFloorOfTheHouse : MonoBehaviour
             }
             else if (Mathf.Abs(planeY - ceilingY) < difThreshold)
             {
+                if (ceilingDetectedPlane == null)
+                {
+                    return true;
+                }
                 if (aRPlane.ExtentX * aRPlane.ExtentZ > ceilingDetectedPlane.ExtentX * ceilingDetectedPlane.ExtentZ)
                 {
                     return true;

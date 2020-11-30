@@ -7,8 +7,10 @@ public class DeleteItem : MonoBehaviour
 {
     public void DeleteButtonClick()
     {
-        Destroy(ManipulationSystem.Instance.SelectedObject.transform.parent.gameObject);
-        ManipulationSystem.Instance.Deselect();
-        Debug.Log("is selected object null ? " + (ManipulationSystem.Instance.SelectedObject == null).ToString());
+        if (ManipulationSystem.Instance.SelectedObject != null)
+        {
+            Destroy(ManipulationSystem.Instance.SelectedObject.transform.parent.gameObject);
+            ManipulationSystem.Instance.Deselect();
+        }
     }
 }
