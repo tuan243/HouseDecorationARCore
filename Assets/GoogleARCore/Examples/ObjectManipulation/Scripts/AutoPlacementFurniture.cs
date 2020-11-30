@@ -7,7 +7,7 @@ using GoogleARCore.Examples.ObjectManipulation;
 public class AutoPlacementFurniture : MonoBehaviour
 {
     //Nếu diện tích của plane lớn hơn số này thì nó là bàn
-    float tableAreaThres = 1f;
+    // float tableAreaThres = 1f;
     public Camera FirstPersonCamera;
     public GameObject ManipulatorPrefab;
     private ObjectStorage objectStorage;
@@ -26,7 +26,7 @@ public class AutoPlacementFurniture : MonoBehaviour
         return projectPoint - d;
     }
 
-    public void TryToPutLivingRoomFurniture(Vector3 lookingVector, Vector3 lookingPoint)
+    public void TryToPutLivingRoomFurniture(Vector3 lookingVector, Vector3 lookingPoint, TrackableHit hit = new TrackableHit())
     {
         var sofa = objectStorage.allFurnitures[4].furnitures[2];
         var table = objectStorage.allFurnitures[5].furnitures[6];
@@ -35,11 +35,17 @@ public class AutoPlacementFurniture : MonoBehaviour
         
         var itemAlineVector = Vector3.Cross(lookingVector, Vector3.up).normalized;
 
-        // var tablePosition = lookingPoint + 0.6f * itemAlineVector;
-        // var sofaPosition = lookingPoint - 0.6f * itemAlineVector;
+        DetectedPlane anchorPlane;
+        if (hit.Trackable != null)
+        {
+            anchorPlane = hit.Trackable as DetectedPlane;
+        }
+        else
+        {
+            Debug.Log("No Detected Plane hit!");
+            anchorPlane = UpdateFloorOfTheHouse.floorDetectedPlane;
+        }
 
-        // var tableRotation = Quaternion.LookRotation(-itemAlineVector);
-        // var sofaRotation = Quaternion.LookRotation(itemAlineVector);
         Vector3 tablePosition;
         Vector3 sofaPosition;
         Vector3 pottedPlantPosition;
@@ -72,10 +78,10 @@ public class AutoPlacementFurniture : MonoBehaviour
                 pottedPlantRotation = Quaternion.identity;
                 shellRotation = Quaternion.LookRotation(planeNormal);
 
-                InstantiateFurniture(table, new Pose(tablePosition, tableRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-                InstantiateFurniture(sofa, new Pose(sofaPosition, sofaRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-                InstantiateFurniture(pottedPlant, new Pose(pottedPlantPosition, pottedPlantRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-                InstantiateFurniture(shell, new Pose(shellPosition, shellRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
+                InstantiateFurniture(table, new Pose(tablePosition, tableRotation), anchorPlane);
+                InstantiateFurniture(sofa, new Pose(sofaPosition, sofaRotation), anchorPlane);
+                InstantiateFurniture(pottedPlant, new Pose(pottedPlantPosition, pottedPlantRotation), anchorPlane);
+                InstantiateFurniture(shell, new Pose(shellPosition, shellRotation), anchorPlane);
 
                 var pictureFrame = objectStorage.allFurnitures[7].furnitures[0];
                 var pictureFramePostion = projectedPoint + 1.7f * Vector3.up;
@@ -98,92 +104,38 @@ public class AutoPlacementFurniture : MonoBehaviour
         pottedPlantRotation = Quaternion.LookRotation(-leftVector);
         shellRotation = Quaternion.LookRotation(-leftVector);
 
-        InstantiateFurniture(table, new Pose(tablePosition, tableRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-        InstantiateFurniture(sofa, new Pose(sofaPosition, sofaRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-        InstantiateFurniture(pottedPlant, new Pose(pottedPlantPosition, pottedPlantRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-        InstantiateFurniture(shell, new Pose(shellPosition, shellRotation), UpdateFloorOfTheHouse.floorDetectedPlane);
-        // var superPoints = objectDetectionInstance.SuperPoints;
-        // int i = 0;
-        // var chairLocation = Vector3.zero;
-        // bool nearChair = false;
-        // LinkedListNode<SuperPoint> pointNode;
-        // for (pointNode = superPoints.First; pointNode != null; pointNode = pointNode.Next)
-        // {
-        //     if ((pointNode.Value.loc - camToItemVectorPoint).sqrMagnitude < 3f)
-        //     {
-        //         var labelAndScoreSP = objectDetectionInstance.GetHighestScoreLabelOfSP(pointNode.Value);
-        //         if (labelAndScoreSP.Item1 == 61 && labelAndScoreSP.Item2 > 0.7f) //if label is chair
-        //         {
-        //             // if (i == 0)
-        //             // {
-        //             //     chairLocation = pointNode.Value.loc;
-        //             // }
-        //             // else
-        //             // {
-        //             //     chairLocation = (chairLocation + pointNode.Value.loc / i) * ((float)i / (i + 1));
-        //             // }
-        //             chairLocation += pointNode.Value.loc;
-
-        //             nearChair = true;
-        //             i++;
-        //         }
-        //     }
-        // }
-
-        // if (i != 0)
-        // {
-        //     chairLocation = chairLocation / i;
-        // }
-
-        // chairLocation = new Vector3(chairLocation.x, UpdateFloorOfTheHouse.floorY, chairLocation.z);
-
-        
-
-
-        // if (!nearChair)
-        // {
-        //     var sofaPose = new Pose(sofaPosition, sofaRotation);
-        //     var sofaObject = Instantiate(sofa, sofaPose.position, sofaPose.rotation);
-        //     var sofaManipulator = Instantiate(ManipulatorPrefab, sofaPose.position, sofaPose.rotation);
-        //     sofaObject.transform.parent = sofaManipulator.transform;
-        //     var sofaAnchor = UpdateFloorOfTheHouse.floorDetectedPlane.CreateAnchor(sofaPose);
-        //     sofaManipulator.transform.parent = sofaAnchor.transform;
-        // }
-        // var tablePose = new Pose(tablePosition, tableRotation);
-        // var tableObject = Instantiate(table, tablePose.position, tablePose.rotation);
-
-        // var tableManipulator = Instantiate(ManipulatorPrefab, tablePose.position, tablePose.rotation);
-        // tableObject.transform.parent = tableManipulator.transform;
-        // var tableAnchor = UpdateFloorOfTheHouse.floorDetectedPlane.CreateAnchor(tablePose);
-
-        // tableManipulator.transform.parent = tableAnchor.transform;
+        InstantiateFurniture(table, new Pose(tablePosition, tableRotation), anchorPlane);
+        InstantiateFurniture(sofa, new Pose(sofaPosition, sofaRotation), anchorPlane);
+        InstantiateFurniture(pottedPlant, new Pose(pottedPlantPosition, pottedPlantRotation), anchorPlane);
+        InstantiateFurniture(shell, new Pose(shellPosition, shellRotation), anchorPlane);
     }
 
-    void TryToPutFlowerOnTheTable(Vector3 tableLocation)
+    void TryToPutFlowerOnTheTable(Vector3 tableLocation, Vector3 lookVector)
     {
-        List<TrackableHit> hitResults = new List<TrackableHit>();
+        // List<TrackableHit> hitResults = new List<TrackableHit>();
+        TrackableHit hit = new TrackableHit();
         TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
 
         Vector3 raycastPoint = new Vector3(tableLocation.x, 0.3f, tableLocation.z);
 
-        if (Frame.RaycastAll(raycastPoint, Vector3.down, hitResults, 2.2f, raycastFilter))
+        if (Frame.Raycast(raycastPoint, Vector3.down, out hit, 2.2f, raycastFilter))
         {
-            foreach (var hit in hitResults)
-            {
+            // foreach (var hit in hitResults)
+            // {
                 if ((hit.Trackable is DetectedPlane) &&
                     Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
                         hit.Pose.rotation * Vector3.up) < 0)
                 {
                     Debug.Log("Hit at back of the current DetectedPlane");
-                    continue;
+                    return;
                 }
 
                 DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
 
-                if (hitPlane.PlaneType != DetectedPlaneType.HorizontalUpwardFacing) 
-                {
-                    continue;
-                }
+                // if (hitPlane.PlaneType != DetectedPlaneType.HorizontalUpwardFacing) 
+                // {
+                //     continue;
+                // }
 
                 if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.1f) //plane is ground
                 {
@@ -196,8 +148,97 @@ public class AutoPlacementFurniture : MonoBehaviour
                 var flower = objectStorage.allFurnitures[vaseCategoryIndex].furnitures[0];
 
                 InstantiateFurniture(flower, itemPose, hitPlane);
+
+                TryToPutChairNearTable(hitPlane, lookVector);
                 return;
+            // }
+        }
+    }
+
+    void TryToPutChairNearTable(DetectedPlane table, Vector3 lookVector)
+    {
+        List<Vector3> tableBoundPoints = new List<Vector3>();
+        table.GetBoundaryPolygon(tableBoundPoints);
+
+        if (tableBoundPoints.Count > 0)
+        {
+            Vector3 nearestPoint = tableBoundPoints[0];
+            foreach(var point in tableBoundPoints)
+            {
+                if ((point - FirstPersonCamera.transform.position).sqrMagnitude <
+                      (nearestPoint - FirstPersonCamera.transform.position).sqrMagnitude)
+                {
+                    nearestPoint = point;
+                }
             }
+
+            // nearestPoint = new Vector3(nearestPoint.x, UpdateFloorOfTheHouse.floorY, nearestPoint.z);
+            nearestPoint += -0.2f * lookVector;
+
+            TrackableHit hit = new TrackableHit();
+
+            if (Frame.Raycast(nearestPoint, Vector3.down, out hit, 2f))
+            {
+                DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
+                Pose chairPose = new Pose(hit.Pose.position, Quaternion.LookRotation(lookVector));
+
+                InstantiateFurniture(objectStorage.allFurnitures[1].furnitures[2], chairPose, hitPlane);
+            }
+            else 
+            {
+                Pose chairPose = new Pose(new Vector3(nearestPoint.x, UpdateFloorOfTheHouse.floorY, nearestPoint.z),
+                                            Quaternion.LookRotation(lookVector));
+                InstantiateFurniture(objectStorage.allFurnitures[1].furnitures[2], chairPose, UpdateFloorOfTheHouse.floorDetectedPlane);
+            }
+        }
+    }
+
+    public void AIButtonClicked()
+    {
+        var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
+                                        0f,
+                                        FirstPersonCamera.transform.forward.z));
+        var camToItemVectorPoint = 2f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
+                                                            UpdateFloorOfTheHouse.floorY,
+                                                            FirstPersonCamera.transform.position.z);
+
+        Vector3 tableLocation;
+        if (IsItemNearBy(camToItemVectorPoint, 66, out tableLocation)) //66: dining table
+        {
+            TryToPutFlowerOnTheTable(tableLocation, camToItemVector);
+            return;
+        }
+
+        TrackableHit hit = new TrackableHit();
+        TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
+        if (Frame.Raycast(new Vector3(camToItemVectorPoint.x, 0.3f, camToItemVectorPoint.z), 
+                                Vector3.down, out hit, 2f, raycastFilter))
+        {
+            if ((hit.Trackable is DetectedPlane) &&
+                    Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
+                        hit.Pose.rotation * Vector3.up) < 0)
+            {
+                Debug.Log("Hit at back of the current DetectedPlane");
+            }
+            else 
+            {
+                DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
+
+                if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.2f) //plane is ground
+                {
+                    Debug.Log("No item in front of me!");
+                    camToItemVectorPoint.Set(camToItemVectorPoint.x, hit.Pose.position.y, camToItemVectorPoint.z);
+                    TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint, hit);
+                }
+                else
+                {
+                    Debug.Log("Not hit the ground!");
+                }
+            }
+        }
+        else
+        {
+            TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint);
         }
     }
 
@@ -213,55 +254,6 @@ public class AutoPlacementFurniture : MonoBehaviour
         var gameObject = Instantiate(objectPrefab, pose.position, pose.rotation, manipulator.transform);
 
         manipulator.GetComponent<Manipulator>().Select();
-    }
-    public void AIButtonClicked()
-    {
-        var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
-                                        0f,
-                                        FirstPersonCamera.transform.forward.z));
-        var camToItemVectorPoint = 2f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
-                                                            UpdateFloorOfTheHouse.floorY,
-                                                            FirstPersonCamera.transform.position.z);
-
-        Vector3 tableLocation;
-        if (IsItemNearBy(camToItemVectorPoint, 66, out tableLocation)) //66: dining table
-        {
-            TryToPutFlowerOnTheTable(tableLocation);
-            return;
-        }
-
-        TrackableHit hit = new TrackableHit();
-        TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
-        if (Frame.Raycast(new Vector3(camToItemVectorPoint.x, 0.3f, camToItemVectorPoint.z), 
-                                Vector3.down, out hit, 2f, raycastFilter))
-        {
-            Debug.Log("yeah hitted");
-            if ((hit.Trackable is DetectedPlane) &&
-                    Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
-                        hit.Pose.rotation * Vector3.up) < 0)
-            {
-                Debug.Log("Hit at back of the current DetectedPlane");
-            }
-            else 
-            {
-                DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
-
-                if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.2f) //plane is ground
-                {
-                    Debug.Log("No item in front of me!");
-                    TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint);
-                }
-                else
-                {
-                    Debug.Log("Not hit the ground!");
-                }
-
-            }
-        }
-        else
-        {
-            TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint);
-        }
     }
 
     bool IsItemNearBy(Vector3 point, int itemLabel, out Vector3 itemLocation, float minScore = 0f)
