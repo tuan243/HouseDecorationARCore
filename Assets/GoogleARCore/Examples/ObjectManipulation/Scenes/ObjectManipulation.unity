@@ -639,7 +639,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 22bcf644e7abe5446864334d381afc9a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2df082ef404583c46a0fe8d3616a24aa, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -825,7 +825,7 @@ GameObject:
   - component: {fileID: 541163481}
   - component: {fileID: 541163484}
   m_Layer: 5
-  m_Name: Setting_Button
+  m_Name: Help_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -912,7 +912,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 361ad9bc88bd29848a49cb05b01fcd72, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 48581df12ce68d2459c6803321786d6b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
