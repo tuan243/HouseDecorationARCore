@@ -110,7 +110,7 @@ public class AutoPlacementFurniture : MonoBehaviour
         InstantiateFurniture(shell, new Pose(shellPosition, shellRotation), anchorPlane);
     }
 
-    void TryToPutFlowerOnTheTable(Vector3 tableLocation, Vector3 lookVector)
+    bool TryToPutFlowerOnTheTable(Vector3 tableLocation, Vector3 lookVector)
     {
         // List<TrackableHit> hitResults = new List<TrackableHit>();
         TrackableHit hit = new TrackableHit();
@@ -120,39 +120,33 @@ public class AutoPlacementFurniture : MonoBehaviour
 
         if (Frame.Raycast(raycastPoint, Vector3.down, out hit, 2.2f, raycastFilter))
         {
-            // foreach (var hit in hitResults)
-            // {
-                if ((hit.Trackable is DetectedPlane) &&
-                    Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
-                        hit.Pose.rotation * Vector3.up) < 0)
-                {
-                    Debug.Log("Hit at back of the current DetectedPlane");
-                    return;
-                }
+            if ((hit.Trackable is DetectedPlane) &&
+                Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
+                    hit.Pose.rotation * Vector3.up) < 0)
+            {
+                Debug.Log("Hit at back of the current DetectedPlane");
+                return false;
+            }
 
-                DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
+            DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
 
-                // if (hitPlane.PlaneType != DetectedPlaneType.HorizontalUpwardFacing) 
-                // {
-                //     continue;
-                // }
+            if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.1f) //plane is ground
+            {
+                Debug.Log("I don't put flower on the ground!");
+                return false;
+            }
 
-                if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.1f) //plane is ground
-                {
-                    Debug.Log("I don't put flower on the ground!");
-                    return;
-                }
+            var itemPose = new Pose(hit.Pose.position, Quaternion.identity);
+            var vaseCategoryIndex = objectStorage.allFurnitures.Count - 2;
+            var flower = objectStorage.allFurnitures[vaseCategoryIndex].furnitures[0];
 
-                var itemPose = new Pose(hit.Pose.position, Quaternion.identity);
-                var vaseCategoryIndex = objectStorage.allFurnitures.Count - 2;
-                var flower = objectStorage.allFurnitures[vaseCategoryIndex].furnitures[0];
+            InstantiateFurniture(flower, itemPose, hitPlane);
 
-                InstantiateFurniture(flower, itemPose, hitPlane);
-
-                TryToPutChairNearTable(hitPlane, lookVector);
-                return;
-            // }
+            TryToPutChairNearTable(hitPlane, lookVector);
+            return true;
         }
+
+        return false; //failed putting flower on the table :()
     }
 
     void TryToPutChairNearTable(DetectedPlane table, Vector3 lookVector)
@@ -205,8 +199,10 @@ public class AutoPlacementFurniture : MonoBehaviour
         Vector3 tableLocation;
         if (IsItemNearBy(camToItemVectorPoint, 66, out tableLocation)) //66: dining table
         {
-            TryToPutFlowerOnTheTable(tableLocation, camToItemVector);
-            return;
+            if (TryToPutFlowerOnTheTable(tableLocation, camToItemVector))
+            {
+                return;
+            }
         }
 
         TrackableHit hit = new TrackableHit();
@@ -224,16 +220,18 @@ public class AutoPlacementFurniture : MonoBehaviour
             {
                 DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
 
-                if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.2f) //plane is ground
-                {
-                    Debug.Log("No item in front of me!");
-                    camToItemVectorPoint.Set(camToItemVectorPoint.x, hit.Pose.position.y, camToItemVectorPoint.z);
-                    TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint, hit);
-                }
-                else
-                {
-                    Debug.Log("Not hit the ground!");
-                }
+                // if (Mathf.Abs(hitPlane.CenterPose.position.y - UpdateFloorOfTheHouse.floorY) < 0.2f) //plane is ground
+                // {
+                //     Debug.Log("No item in front of me!");
+                //     camToItemVectorPoint.Set(camToItemVectorPoint.x, hit.Pose.position.y, camToItemVectorPoint.z);
+                //     TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint, hit);
+                // }
+                // else
+                // {
+                //     Debug.Log("Not hit the ground!");
+                // }
+                camToItemVectorPoint.Set(camToItemVectorPoint.x, hit.Pose.position.y, camToItemVectorPoint.z);
+                TryToPutLivingRoomFurniture(camToItemVector, camToItemVectorPoint, hit);
             }
         }
         else
@@ -244,7 +242,6 @@ public class AutoPlacementFurniture : MonoBehaviour
 
     void InstantiateFurniture(GameObject objectPrefab, Pose pose, DetectedPlane arPlane)
     {
-        Debug.Log($"Floor detected plane is null? {(UpdateFloorOfTheHouse.floorDetectedPlane == null).ToString()}");
         if (arPlane == null)
         {
             return;
