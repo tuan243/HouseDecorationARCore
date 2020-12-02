@@ -123,10 +123,14 @@ namespace GoogleARCore.Examples.Common
         /// </summary>
         private bool m_IsLostTrackingDisplayed;
 
+        private bool m_DoesUserNeedHelpWhenTracking;
+
         /// <summary>
         /// A list to hold detected planes ARCore is tracking in the current frame.
         /// </summary>
         private List<DetectedPlane> m_DetectedPlanes = new List<DetectedPlane>();
+
+        [SerializeField] private CurrentObjectManager objectManager;
 
         /// <summary>
         /// Unity's Start() method.
@@ -182,7 +186,7 @@ namespace GoogleARCore.Examples.Common
         /// <summary>
         /// Callback executed when the open button has been clicked by the user.
         /// </summary>
-        private void _OnOpenButtonClicked()
+        public void _OnOpenButtonClicked()
         {
             m_MoreHelpWindow.SetActive(true);
 
@@ -197,6 +201,7 @@ namespace GoogleARCore.Examples.Common
         /// </summary>
         private void _OnGotItButtonClicked()
         {
+            Debug.Log("got it clicked :)");
             m_MoreHelpWindow.SetActive(false);
             enabled = true;
         }
@@ -289,13 +294,15 @@ namespace GoogleARCore.Examples.Common
                     m_SnackBarText.text = "Need Help?";
                     m_OpenButton.SetActive(true);
                 }
-                else
+                else 
                 {
                     m_SnackBarText.text = "Point your camera to where you want to place an object.";
                     m_OpenButton.SetActive(false);
                 }
+
+                m_DoesUserNeedHelpWhenTracking = true;
             }
-            else if (m_NotDetectedPlaneElapsed > 0f || m_DetectedPlaneElapsed > k_HideGuideDelay)
+            else if (m_DoesUserNeedHelpWhenTracking && (m_NotDetectedPlaneElapsed > 0f || m_DetectedPlaneElapsed > k_HideGuideDelay))
             {
                 // The session is tracking but no planes have been found in less than
                 // 'DisplayGuideDelay' or at least one plane has been tracking for more than
@@ -311,6 +318,8 @@ namespace GoogleARCore.Examples.Common
                 }
 
                 m_HandAnimation.enabled = false;
+                
+                m_DoesUserNeedHelpWhenTracking = false;
             }
         }
 

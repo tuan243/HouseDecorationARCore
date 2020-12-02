@@ -28,6 +28,7 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 {
     public GameObject categoryButton;
     public GameObject furnitureButton;
+    private CurrentObjectManager objectManager;
     private ObjectStorage objectStorage;
     private Transform categoryButtonsContainer;
     private Transform furButtonsContainer;
@@ -36,11 +37,16 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public static bool wasClickedOnUI = false;
     public GameObject manipulatorPrefab;
     public Camera FirstPersonCamera;
+    [SerializeField] private GameObject m_SnackBar = null;
+    [SerializeField] private Text m_SnackBarText = null;
+    private int numberOfCoroutineRunning = 0;
+    private float snackBarShowTime = 3f;
     void Awake()
     {
         categoryButtonsContainer = transform.Find("FurCategoryListView/Content");
         furButtonsContainer = transform.Find("FurListView/Content");
         objectStorage = GameObject.Find("/ObjectStorage").GetComponent<ObjectStorage>();
+        objectManager = GameObject.Find("/CurrentObjectManager").GetComponent<CurrentObjectManager>();
     }
     void Start()
     {
@@ -77,15 +83,32 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void FurButtonClick(int categoryIndex, int furIndex)
     {
+        Debug.Log("object manager null? " + (objectManager == null).ToString());
+        Debug.Log("CurrentObjectManager.maxObjectCount null " + CurrentObjectManager.maxObjectCount);
+        if (objectManager.CurObjectCount >= CurrentObjectManager.maxObjectCount)
+        {
+            StartCoroutine("ShowSnackBar");
+            return;
+        }
+        // Debug.Log("check -1");
+        // Debug.Log("object storage null: " + (objectStorage == null).ToString());
         var choosenFur = objectStorage.allFurnitures[categoryIndex].furnitures[furIndex];
+        // Debug.Log("object storage null: " + (objectStorage == null).ToString());
+        Debug.Log("first person camera null: " + (FirstPersonCamera == null).ToString());
 
         var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
                                         0f,
                                         FirstPersonCamera.transform.forward.z));
+        // Debug.Log("first person camera null: " + (FirstPersonCamera == null).ToString());
         var camToItemVectorPoint = 1f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
                                                             UpdateFloorOfTheHouse.floorY,
                                                             FirstPersonCamera.transform.position.z);
+        // Debug.Log("object storage null: " + (objectStorage == null).ToString());
+        // Debug.Log("first person camera null: " + (FirstPersonCamera == null).ToString());
+
         var itemRotation = Quaternion.LookRotation(-camToItemVector); // hướng đồ vật vào mặt mình
+
+        // Debug.Log("check 0");
 
         if (categoryIndex == objectStorage.allFurnitures.Count - 1) //last index is wall furniture
         {
@@ -98,6 +121,7 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                             Quaternion.LookRotation(Vector3.up, hit.Pose.rotation * Vector3.up));
 
                 InstantiateFurniture(choosenFur, itemPose, hit.Trackable as DetectedPlane);
+                return;
             }
 
             if (walls.Count == 0)
@@ -135,7 +159,7 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             
             return;
         }
-
+        // Debug.Log("Check 1");
         List<TrackableHit> hitResults = new List<TrackableHit>();
         TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon;
 
@@ -144,6 +168,7 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         {
             foreach (var hit in hitResults)
             {
+                // Debug.Log("Check 2");
                 if ((hit.Trackable is DetectedPlane) &&
                     Vector3.Dot(FirstPersonCamera.transform.position - hit.Pose.position,
                         hit.Pose.rotation * Vector3.up) < 0)
@@ -151,7 +176,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                     Debug.Log("Hit at back of the current DetectedPlane");
                     continue;
                 }
-
                 DetectedPlane hitPlane = hit.Trackable as DetectedPlane;
                 if (hitPlane.PlaneType == DetectedPlaneType.HorizontalUpwardFacing)
                 {
@@ -164,6 +188,8 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         else 
         {
             var itemPose = new Pose(camToItemVectorPoint, itemRotation);
+            // Debug.Log("Check 1");
+
             InstantiateFurniture(choosenFur, itemPose, UpdateFloorOfTheHouse.floorDetectedPlane);
         }
     }
@@ -193,6 +219,20 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         wasClickedOnUI = false;
     }
 
+    IEnumerator ShowSnackBar()
+    {
+        // Debug.Log("Coroutine ^-^");
+        numberOfCoroutineRunning++;
+        m_SnackBar.SetActive(true);
+        m_SnackBarText.text = "Reached maximum number of item. Try to remove some furniture.";
+        yield return new WaitForSeconds(3f);
+        numberOfCoroutineRunning--;
+        if (numberOfCoroutineRunning == 0)
+        {
+            m_SnackBar.SetActive(false);
+        }
+    }
+
     void InstantiateFurniture(GameObject objectPrefab, Pose pose, DetectedPlane arPlane)
     {
         if (arPlane == null)
@@ -204,5 +244,7 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         var gameObject = Instantiate(objectPrefab, pose.position, pose.rotation, manipulator.transform);
 
         manipulator.GetComponent<Manipulator>().Select();
+
+        Debug.Log("curr object count: " + objectManager.CurObjectCount.ToString());
     }
 }
