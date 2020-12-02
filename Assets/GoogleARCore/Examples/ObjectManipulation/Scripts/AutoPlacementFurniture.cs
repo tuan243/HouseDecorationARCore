@@ -12,11 +12,13 @@ public class AutoPlacementFurniture : MonoBehaviour
     public GameObject ManipulatorPrefab;
     private ObjectStorage objectStorage;
     private ObjectDetection objectDetectionInstance;
+    private CurrentObjectManager objectManager;
 
     void Awake()
     {
         objectStorage = GameObject.Find("/ObjectStorage").GetComponent<ObjectStorage>();
         objectDetectionInstance = GameObject.Find("/SSD").GetComponent<ObjectDetection>();
+        objectManager = GameObject.Find("/CurrentObjectManager").GetComponent<CurrentObjectManager>();
     }
 
     Vector3 ProjectPointToPlane(Vector3 projectPoint, Vector3 pointInPlane, Vector3 planeNormal)
@@ -189,6 +191,10 @@ public class AutoPlacementFurniture : MonoBehaviour
 
     public void AIButtonClicked()
     {
+        if (!objectManager.CanPlaceMoreItem())
+        {
+            return;
+        }
         var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
                                         0f,
                                         FirstPersonCamera.transform.forward.z));

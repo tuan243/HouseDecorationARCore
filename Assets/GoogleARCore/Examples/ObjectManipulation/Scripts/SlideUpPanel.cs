@@ -37,10 +37,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public static bool wasClickedOnUI = false;
     public GameObject manipulatorPrefab;
     public Camera FirstPersonCamera;
-    [SerializeField] private GameObject m_SnackBar = null;
-    [SerializeField] private Text m_SnackBarText = null;
-    private int numberOfCoroutineRunning = 0;
-    private float snackBarShowTime = 3f;
     void Awake()
     {
         categoryButtonsContainer = transform.Find("FurCategoryListView/Content");
@@ -85,9 +81,8 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         Debug.Log("object manager null? " + (objectManager == null).ToString());
         Debug.Log("CurrentObjectManager.maxObjectCount null " + CurrentObjectManager.maxObjectCount);
-        if (objectManager.CurObjectCount >= CurrentObjectManager.maxObjectCount)
+        if (!objectManager.CanPlaceMoreItem())
         {
-            StartCoroutine("ShowSnackBar");
             return;
         }
         // Debug.Log("check -1");
@@ -124,10 +119,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                 return;
             }
 
-            if (walls.Count == 0)
-            {
-                Debug.Log("wall is empty :(");
-            }
             foreach (DetectedPlane wall in walls) {
                 Plane wallPlane = new Plane(wall.CenterPose.rotation * Vector3.up, wall.CenterPose.position);
                 if (wallPlane.GetDistanceToPoint(camToItemVectorPoint) < 1.2f)
@@ -146,16 +137,13 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                                     Quaternion.LookRotation(Vector3.up, wall.CenterPose.rotation * Vector3.up));
 
                         InstantiateFurniture(choosenFur, itemPose, wall);
-                        Debug.Log("Yeah");
                     }
 
-                    break;
-                }
-                else
-                {
-                    Debug.Log("Not reach wall :(");
+                    return;
                 }
             }
+
+            objectManager.ShowSnackBarMessage(1);
             
             return;
         }
@@ -217,20 +205,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerUp(PointerEventData eventData)
     {
         wasClickedOnUI = false;
-    }
-
-    IEnumerator ShowSnackBar()
-    {
-        // Debug.Log("Coroutine ^-^");
-        numberOfCoroutineRunning++;
-        m_SnackBar.SetActive(true);
-        m_SnackBarText.text = "Reached maximum number of item. Try to remove some furniture.";
-        yield return new WaitForSeconds(3f);
-        numberOfCoroutineRunning--;
-        if (numberOfCoroutineRunning == 0)
-        {
-            m_SnackBar.SetActive(false);
-        }
     }
 
     void InstantiateFurniture(GameObject objectPrefab, Pose pose, DetectedPlane arPlane)

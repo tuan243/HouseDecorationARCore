@@ -1019,6 +1019,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ae65686ab49be46bc577ee5426720a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SnackBar: {fileID: 835575572}
+  m_SnackBarText: {fileID: 627444558}
 --- !u!4 &1671727038
 Transform:
   m_ObjectHideFlags: 0
