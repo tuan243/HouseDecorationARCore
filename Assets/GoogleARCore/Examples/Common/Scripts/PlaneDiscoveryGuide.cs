@@ -125,6 +125,8 @@ namespace GoogleARCore.Examples.Common
 
         private bool m_DoesUserNeedHelpWhenTracking;
 
+        [SerializeField] private GameObject openFurMenuButton;
+
         /// <summary>
         /// A list to hold detected planes ARCore is tracking in the current frame.
         /// </summary>
@@ -201,7 +203,6 @@ namespace GoogleARCore.Examples.Common
         /// </summary>
         private void _OnGotItButtonClicked()
         {
-            Debug.Log("got it clicked :)");
             m_MoreHelpWindow.SetActive(false);
             enabled = true;
         }
@@ -302,14 +303,28 @@ namespace GoogleARCore.Examples.Common
 
                 m_DoesUserNeedHelpWhenTracking = true;
             }
-            else if (m_DoesUserNeedHelpWhenTracking && (m_NotDetectedPlaneElapsed > 0f || m_DetectedPlaneElapsed > k_HideGuideDelay))
+            // else if (m_DoesUserNeedHelpWhenTracking && (m_NotDetectedPlaneElapsed > 0f || m_DetectedPlaneElapsed > k_HideGuideDelay))
+            if (m_DoesUserNeedHelpWhenTracking && m_DetectedPlaneElapsed > k_HideGuideDelay)
             {
                 // The session is tracking but no planes have been found in less than
                 // 'DisplayGuideDelay' or at least one plane has been tracking for more than
                 // 'k_HideGuideDelay'.
                 m_FeaturePoints.SetActive(false);
-                m_SnackBar.SetActive(false);
+                // m_SnackBar.SetActive(false);
                 m_OpenButton.SetActive(false);
+                m_SnackBarText.text = "Tap on furniture button below to place furniture in your room.";
+
+                var openMenu = openFurMenuButton.GetComponent<Openmenu>();
+                Animator animator = openMenu.Panel.GetComponent<Animator>();
+                if (animator != null )
+                {
+                    bool isOpen = animator.GetBool("open");
+                    if (!isOpen)
+                    {
+                        openMenu.OpenPanel();
+                    }
+                }
+
 
                 if (m_HandAnimation.enabled)
                 {

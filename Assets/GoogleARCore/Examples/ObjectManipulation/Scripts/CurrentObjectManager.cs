@@ -12,7 +12,7 @@ public class CurrentObjectManager : MonoBehaviour
             "This furniture need to place on wall. Try to aim on the detected wall."
     };
     private List<Anchor> curObjects = new List<Anchor>();
-    public static int maxObjectCount = 5;
+    public static int maxObjectCount = 20;
     private int numberOfCoroutineRunning = 0;
     [SerializeField] private GameObject m_SnackBar = null;
     [SerializeField] private Text m_SnackBarText = null;
@@ -68,5 +68,10 @@ public class CurrentObjectManager : MonoBehaviour
         {
             m_SnackBar.SetActive(false);
         }
+    }
+
+    public void HideSnackBar()
+    {   
+        m_SnackBar.SetActive(false);
     }
 }

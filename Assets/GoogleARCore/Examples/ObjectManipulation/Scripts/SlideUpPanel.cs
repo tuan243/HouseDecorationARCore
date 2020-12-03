@@ -79,40 +79,32 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void FurButtonClick(int categoryIndex, int furIndex)
     {
-        Debug.Log("object manager null? " + (objectManager == null).ToString());
-        Debug.Log("CurrentObjectManager.maxObjectCount null " + CurrentObjectManager.maxObjectCount);
         if (!objectManager.CanPlaceMoreItem())
         {
             return;
         }
-        // Debug.Log("check -1");
-        // Debug.Log("object storage null: " + (objectStorage == null).ToString());
+
         var choosenFur = objectStorage.allFurnitures[categoryIndex].furnitures[furIndex];
-        // Debug.Log("object storage null: " + (objectStorage == null).ToString());
-        Debug.Log("first person camera null: " + (FirstPersonCamera == null).ToString());
 
         var camToItemVector = Vector3.Normalize(new Vector3(FirstPersonCamera.transform.forward.x,
                                         0f,
                                         FirstPersonCamera.transform.forward.z));
-        // Debug.Log("first person camera null: " + (FirstPersonCamera == null).ToString());
+
         var camToItemVectorPoint = 1f * camToItemVector + new Vector3(FirstPersonCamera.transform.position.x,
                                                             UpdateFloorOfTheHouse.floorY,
                                                             FirstPersonCamera.transform.position.z);
-        // Debug.Log("object storage null: " + (objectStorage == null).ToString());
-        // Debug.Log("first person camera null: " + (FirstPersonCamera == null).ToString());
 
         var itemRotation = Quaternion.LookRotation(-camToItemVector); // hướng đồ vật vào mặt mình
-
-        // Debug.Log("check 0");
 
         if (categoryIndex == objectStorage.allFurnitures.Count - 1) //last index is wall furniture
         {
             var walls = UpdateFloorOfTheHouse.wallDetectedPlanes;
             var projectedPoint = Vector3.zero;
             TrackableHit hit = new TrackableHit();
-            if (Frame.Raycast(FirstPersonCamera.transform.position, camToItemVector, out hit, 2f))
+            TrackableHitFlags filter = TrackableHitFlags.PlaneWithinPolygon;
+            if (Frame.Raycast(Screen.width /2, Screen.height/2, filter, out hit))
             {
-                var itemPose = new Pose(projectedPoint, 
+                var itemPose = new Pose(hit.Pose.position, 
                             Quaternion.LookRotation(Vector3.up, hit.Pose.rotation * Vector3.up));
 
                 InstantiateFurniture(choosenFur, itemPose, hit.Trackable as DetectedPlane);
@@ -220,5 +212,6 @@ public class SlideUpPanel : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         manipulator.GetComponent<Manipulator>().Select();
 
         Debug.Log("curr object count: " + objectManager.CurObjectCount.ToString());
+        objectManager.HideSnackBar();
     }
 }

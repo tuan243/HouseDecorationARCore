@@ -30,9 +30,9 @@ public class AutoPlacementFurniture : MonoBehaviour
 
     public void TryToPutLivingRoomFurniture(Vector3 lookingVector, Vector3 lookingPoint, TrackableHit hit = new TrackableHit())
     {
-        var sofa = objectStorage.allFurnitures[4].furnitures[2];
-        var table = objectStorage.allFurnitures[5].furnitures[6];
-        var pottedPlant = objectStorage.allFurnitures[6].furnitures[8];
+        var sofa = objectStorage.allFurnitures[4].furnitures[0];
+        var table = objectStorage.allFurnitures[5].furnitures[0];
+        var pottedPlant = objectStorage.allFurnitures[6].furnitures[2];
         var shell = objectStorage.allFurnitures[3].furnitures[0];
         
         var itemAlineVector = Vector3.Cross(lookingVector, Vector3.up).normalized;
@@ -184,7 +184,7 @@ public class AutoPlacementFurniture : MonoBehaviour
             {
                 Pose chairPose = new Pose(new Vector3(nearestPoint.x, UpdateFloorOfTheHouse.floorY, nearestPoint.z),
                                             Quaternion.LookRotation(lookVector));
-                InstantiateFurniture(objectStorage.allFurnitures[1].furnitures[2], chairPose, UpdateFloorOfTheHouse.floorDetectedPlane);
+                InstantiateFurniture(objectStorage.allFurnitures[1].furnitures[0], chairPose, UpdateFloorOfTheHouse.floorDetectedPlane);
             }
         }
     }
@@ -257,6 +257,8 @@ public class AutoPlacementFurniture : MonoBehaviour
         var gameObject = Instantiate(objectPrefab, pose.position, pose.rotation, manipulator.transform);
 
         manipulator.GetComponent<Manipulator>().Select();
+
+        objectManager.HideSnackBar();
     }
 
     bool IsItemNearBy(Vector3 point, int itemLabel, out Vector3 itemLocation, float minScore = 0f)

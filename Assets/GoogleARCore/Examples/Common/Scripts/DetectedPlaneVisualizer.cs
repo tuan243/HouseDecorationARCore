@@ -72,9 +72,19 @@ namespace GoogleARCore.Examples.Common
                 m_MeshRenderer.enabled = false;
                 return;
             }
+            else
+            {
+                List<Anchor> anchors = new List<Anchor>();
+                m_DetectedPlane.GetAllAnchors(anchors);
+                if (anchors.Count > 0) 
+                {
+                    m_MeshRenderer.enabled = false;
+                    return;
+                }
+            }
 
             m_MeshRenderer.enabled = true;
-            _UpdatePlaneColor();
+            // _UpdatePlaneColor();
             _UpdateMeshIfNeeded();
         }
 
@@ -86,7 +96,8 @@ namespace GoogleARCore.Examples.Common
         {
             m_DetectedPlane = plane;
             // m_MeshRenderer.material.SetColor("_GridColor", Color.white);
-            m_MeshRenderer.material.SetColor("_GridColor", color);
+            m_MeshRenderer.material.SetColor("_GridColor", new Color(1f, 1f, 1f, 0.1f));
+            // m_MeshRenderer.material.SetColor("_GridColor", color);
             m_MeshRenderer.material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
 
             Update();
@@ -95,30 +106,31 @@ namespace GoogleARCore.Examples.Common
         public void Initialize(DetectedPlane plane)
         {
             m_DetectedPlane = plane;
-            m_MeshRenderer.material.SetColor("_GridColor", Color.blue);
+            // m_MeshRenderer.material.SetColor("_GridColor", Color.blue);
+            m_MeshRenderer.material.SetColor("_GridColor", new Color(1f, 1f, 1f, 0.5f));
             m_MeshRenderer.material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
 
             Update();
         }
 
-        private void _UpdatePlaneColor()
-        {
-            var planeWithTypes = UpdateFloorOfTheHouse.planeWithTypeDict;
+        // private void _UpdatePlaneColor()
+        // {
+        //     var planeWithTypes = UpdateFloorOfTheHouse.planeWithTypeDict;
             
-            if (!planeWithTypes.ContainsKey(m_DetectedPlane))
-            {
-                return;
-            }
+        //     if (!planeWithTypes.ContainsKey(m_DetectedPlane))
+        //     {
+        //         return;
+        //     }
 
-            Color color;
-            switch (planeWithTypes[m_DetectedPlane])
-            {
-                case 0: color = Color.white; break;
-                case 1: color = Color.red; break;
-                default: color = Color.blue; break;
-            }
-            m_MeshRenderer.material.SetColor("_GridColor", color);
-        }
+        //     Color color;
+        //     switch (planeWithTypes[m_DetectedPlane])
+        //     {
+        //         case 0: color = Color.white; break;
+        //         case 1: color = Color.red; break;
+        //         default: color = Color.blue; break;
+        //     }
+        //     m_MeshRenderer.material.SetColor("_GridColor", color);
+        // }
 
         /// <summary>
         /// Update mesh with a list of Vector3 and plane's center position.

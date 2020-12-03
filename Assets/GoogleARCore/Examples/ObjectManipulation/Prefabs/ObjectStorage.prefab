@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3429368084892129322
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3429368084892129323}
+  - component: {fileID: 3429368084892129320}
+  m_Layer: 0
+  m_Name: ObjectStorage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3429368084892129323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429368084892129322}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3429368084892129320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429368084892129322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3bca333fc58fda41a2a376bdf48c4d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allFurnitures:
+  - categoryName: Bed
+    furnitures:
+    - {fileID: 7672841224421859676, guid: 3fa53d85cd2d56d4882eb9ea59f539b1, type: 3}
+    - {fileID: 998931746377394693, guid: c2710f143c4c67d4c984dea35ae682e2, type: 3}
+    - {fileID: 7201364462069924866, guid: b421847f285c63b4d8b7e4b496b017b7, type: 3}
+    icons:
+    - {fileID: 21300000, guid: abf7515f5b7a3ec4485317c03913bf10, type: 3}
+    - {fileID: 21300000, guid: c0ecee327f6686044b1244e00a3b9907, type: 3}
+    - {fileID: 21300000, guid: 56a77693ddeab764ab04e5a702e3c295, type: 3}
+  - categoryName: Chair
+    furnitures:
+    - {fileID: 6047396496498652796, guid: ee5c06c709bdd1042a1c5fb6859721ea, type: 3}
+    - {fileID: 4500097954179701017, guid: 4fcd06a62472c9a4581301c3c248d85d, type: 3}
+    - {fileID: 5275490372205258325, guid: 43d7f079dca1ca74a91e941238896760, type: 3}
+    - {fileID: 1226193952903538563, guid: c2b3fef7caba83543b8f9c6563a251b9, type: 3}
+    - {fileID: 3691487471401476004, guid: 85cff49aba2deaa4f9b5c046d0dcf657, type: 3}
+    icons:
+    - {fileID: 21300000, guid: c9323d7390dc0f34ab6d3be913a261bd, type: 3}
+    - {fileID: 21300000, guid: e57c4760ffd06834db5789781169b7ce, type: 3}
+    - {fileID: 21300000, guid: 2aac32b34d480df4a881a2df9b714a78, type: 3}
+    - {fileID: 21300000, guid: 4ed44af8f9826d9419a417f671ea20d1, type: 3}
+    - {fileID: 21300000, guid: 57fad921071e2144faa0a20c559faa7c, type: 3}
+  - categoryName: Lamp
+    furnitures:
+    - {fileID: 7187824094649114313, guid: 61678e0a41307394a91ae115c1b1cc8e, type: 3}
+    - {fileID: 5261439843042539473, guid: c64e94af029e49048a6a6c55c8340de6, type: 3}
+    - {fileID: 5981950355873177819, guid: 0116f4a554950fb42bde85ade8531042, type: 3}
+    - {fileID: 8740289079429740629, guid: aca5b34b9ba12654f93eef2412ecfa9e, type: 3}
+    icons:
+    - {fileID: 21300000, guid: 819b3e72da7a8e44dabc39c3fd182eaf, type: 3}
+    - {fileID: 21300000, guid: cb71247792c0c594a825218b49b5276a, type: 3}
+    - {fileID: 21300000, guid: ef28c8ad1ea73c44891fc9429892d52d, type: 3}
+    - {fileID: 21300000, guid: d375be532a89910419bbcf2b08c0e3eb, type: 3}
+  - categoryName: Shell
+    furnitures:
+    - {fileID: 1964584204825673554, guid: d6ce686a665b89047a865f50801cdab4, type: 3}
+    - {fileID: 2383847856019406488, guid: 55bc2722e438bb14cafca9aec3f4539c, type: 3}
+    - {fileID: 4581559688559186716, guid: 31a5e4cab84255c45ab7e07b6e203cfd, type: 3}
+    - {fileID: 4203744278827586243, guid: 06e2f9e2e0e4c13488af42eb3916368c, type: 3}
+    icons:
+    - {fileID: 21300000, guid: e15d5f00da521af4da652ebbf018edd4, type: 3}
+    - {fileID: 21300000, guid: 0fe85222ddd6e31429e0a16e42d38ea5, type: 3}
+    - {fileID: 21300000, guid: 69a1cf1bb962630439d9b964239c95f5, type: 3}
+    - {fileID: 21300000, guid: f91483b3cacd7e54f9cd8ea1acbe44e5, type: 3}
+  - categoryName: Sofa
+    furnitures:
+    - {fileID: 3305537292431475296, guid: 3405b9390523ecc478dd0851dc41d497, type: 3}
+    - {fileID: 7011459530861175767, guid: a4808c42e547aa94a9d58744e5a63289, type: 3}
+    - {fileID: 627641226993672687, guid: a0e1d5c703a7fc94cab598b640f25b84, type: 3}
+    - {fileID: 8401692654903628593, guid: 55976ce7de867ba4fa026c896721130b, type: 3}
+    - {fileID: 3168200486311400168, guid: c85b50ec50f0d904487ca9bddee4f996, type: 3}
+    icons:
+    - {fileID: 21300000, guid: 54dcfda39469ea3448050d885b70e634, type: 3}
+    - {fileID: 21300000, guid: db1f4746aa53e684182ed52dcb0ff952, type: 3}
+    - {fileID: 21300000, guid: 4aef848595f11c3458860443220cf2d2, type: 3}
+    - {fileID: 21300000, guid: 31cbe31af21b5214b89b72eb5041cf1c, type: 3}
+    - {fileID: 21300000, guid: b2b28263d1a3cbb4491f2ed1e3bb9fb3, type: 3}
+  - categoryName: Table
+    furnitures:
+    - {fileID: 6985146860115554717, guid: 228c52df5da64df478d550b9b0ad9721, type: 3}
+    - {fileID: 2520953495936906968, guid: 60632d9c09dc01a4d91628c16010a879, type: 3}
+    - {fileID: 7984383975434074103, guid: 985e252aeb03af843a16ae7ae180d223, type: 3}
+    - {fileID: 6879381006180043183, guid: 519bca250ea3b2c4eaa285b7c57d1a82, type: 3}
+    - {fileID: 441112789036017103, guid: 3158d3bffdc923c4b93708e1d034ec52, type: 3}
+    icons:
+    - {fileID: 21300000, guid: f64b474a9c9075d49ac3da18f698238a, type: 3}
+    - {fileID: 21300000, guid: f1b41ef6cba26684ab4b60d76c89f149, type: 3}
+    - {fileID: 21300000, guid: 3128e06d6d26c7740963e203024809d3, type: 3}
+    - {fileID: 21300000, guid: 312b6baf5ee8c234eb94f9bdaaa0316d, type: 3}
+    - {fileID: 21300000, guid: 7b45ec964c87be3458d28c23ad11258a, type: 3}
+  - categoryName: Vase
+    furnitures:
+    - {fileID: 6066552734470148216, guid: 34d422a0bc647df44b8436198ea7bdf7, type: 3}
+    - {fileID: 2950063226223628916, guid: 1d1c77eaf57d213458b584c393ceaeca, type: 3}
+    - {fileID: 1147810738814406018, guid: daab22cdbb0d88946819a8d63d7988b6, type: 3}
+    - {fileID: 5102118382947980052, guid: d2a9c090b8449ac48819b3377e6c142f, type: 3}
+    - {fileID: 2953744353819313844, guid: fb3b7d868114c0745b44f0161122332d, type: 3}
+    icons:
+    - {fileID: 21300000, guid: fbab402597291924ebc5e73d47248728, type: 3}
+    - {fileID: 21300000, guid: f76fbf70e85559545b6d8d93072164f3, type: 3}
+    - {fileID: 21300000, guid: 8c20e7f8abaa5e5469259dd6474b97ea, type: 3}
+    - {fileID: 21300000, guid: 44ccf1f509542114ba1b2e09f6f1ff17, type: 3}
+    - {fileID: 21300000, guid: 231805fa2f9196f4db120373b1e22cd3, type: 3}
+  - categoryName: Picture
+    furnitures:
+    - {fileID: 5138361316289329637, guid: 6fac464c851fa6d40946fa15822020a1, type: 3}
+    - {fileID: 4674757993962464544, guid: f795ae91c09b35c45ae35a7a2615151a, type: 3}
+    - {fileID: 5276152107324956384, guid: af2669b571c3c2a428f51b65fd127467, type: 3}
+    - {fileID: 87680600328408261, guid: 12dbf1419c6a9b44e919c18da63afd00, type: 3}
+    - {fileID: 3253109556515733358, guid: 495dc98a0248ec14cab88e93ad08dd4b, type: 3}
+    icons:
+    - {fileID: 21300000, guid: cfbde476d954cc84db8d22ea860c9686, type: 3}
+    - {fileID: 21300000, guid: e5744eae80af1394b95da47fc94261a7, type: 3}
+    - {fileID: 21300000, guid: 72f114b248d3a734e882a39ac148c40c, type: 3}
+    - {fileID: 21300000, guid: d9663716dc44b584ab0a00bbabdb1fb1, type: 3}
+    - {fileID: 21300000, guid: e1a5921d3b881074ea0fd2e0cb595e5d, type: 3}

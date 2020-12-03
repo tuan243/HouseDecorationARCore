@@ -24,7 +24,7 @@ public class ObjectDetection : MonoBehaviour
     private float m_minSPDistance = 1f;
     private int m_MaxPointCount = 1000;
     private LinkedList<Vector3> m_CachedPoints;
-    private List<GameObject> m_ObjectList;
+    // private List<GameObject> m_ObjectList;
     private Dictionary<int, PointCloudPoint> m_CachedPointsDict;
     private LinkedList<SuperPoint> m_SuperPoints;
     public LinkedList<SuperPoint> SuperPoints
@@ -65,7 +65,7 @@ public class ObjectDetection : MonoBehaviour
     {
         m_CachedPointsDict = new Dictionary<int, PointCloudPoint>();
         m_SuperPoints = new LinkedList<SuperPoint>();
-        m_ObjectList = new List<GameObject>();
+        // m_ObjectList = new List<GameObject>();
 
         string path = Path.Combine(Application.streamingAssetsPath, fileName);
         sSDAsync = new SSDAsync(path);
@@ -149,21 +149,21 @@ public class ObjectDetection : MonoBehaviour
                     sp.list_score.Add(label, labelScore);
                 }
 
-                float maxValue = -1f;
-                int l = 0;
-                foreach (var score in sp.list_score)
-                {
-                    if (score.Value > maxValue)
-                    {
-                        maxValue = score.Value;
-                        l = score.Key;
-                    }
-                }
+                // float maxValue = -1f;
+                // int l = 0;
+                // foreach (var score in sp.list_score)
+                // {
+                //     if (score.Value > maxValue)
+                //     {
+                //         maxValue = score.Value;
+                //         l = score.Key;
+                //     }
+                // }
 
-                if (m_categoryColorMap.ContainsKey(l))
-                {
-                    m_ObjectList[sp.id].GetComponent<MeshRenderer>().material.color = m_categoryColorMap[l];
-                }
+                // if (m_categoryColorMap.ContainsKey(l))
+                // {
+                //     m_ObjectList[sp.id].GetComponent<MeshRenderer>().material.color = m_categoryColorMap[l];
+                // }
             }
 
             if (vdiff >= 45f)
@@ -185,14 +185,14 @@ public class ObjectDetection : MonoBehaviour
         else
         {
             m_SuperPoints.AddLast(new SuperPoint(m_SuperPoints.Count, loc, label, labelScore, view, scale));
-            Vector3 lookVector = new Vector3(FirstPersonCamera.transform.position.x - loc.x, loc.y, FirstPersonCamera.transform.position.z - loc.z);
-            Quaternion lookCameraRotation = Quaternion.LookRotation(lookVector, Vector3.up);
-            var gameObject = Instantiate(objectPoint, loc, lookCameraRotation);
-            if (m_categoryColorMap.ContainsKey(label))
-            {
-                gameObject.GetComponent<MeshRenderer>().material.color = m_categoryColorMap[label];
-            }
-            m_ObjectList.Add(gameObject);
+            // Vector3 lookVector = new Vector3(FirstPersonCamera.transform.position.x - loc.x, loc.y, FirstPersonCamera.transform.position.z - loc.z);
+            // Quaternion lookCameraRotation = Quaternion.LookRotation(lookVector, Vector3.up);
+            // var gameObject = Instantiate(objectPoint, loc, lookCameraRotation);
+            // if (m_categoryColorMap.ContainsKey(label))
+            // {
+            //     gameObject.GetComponent<MeshRenderer>().material.color = m_categoryColorMap[label];
+            // }
+            // m_ObjectList.Add(gameObject);
         }
     }
 
@@ -400,11 +400,11 @@ public class ObjectDetection : MonoBehaviour
         // m_CachedPoints.Clear();
         m_CachedPointsDict.Clear();
         m_SuperPoints.Clear();
-        foreach (var obj in m_ObjectList) 
-        {
-            Destroy(obj);
-        }
-        m_ObjectList.Clear();
+        // foreach (var obj in m_ObjectList) 
+        // {
+        //     Destroy(obj);
+        // }
+        // m_ObjectList.Clear();
     }
 
     private void _AddPointToCache(PointCloudPoint point)
